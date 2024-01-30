@@ -111,8 +111,3 @@ def history(request: HttpRequest):
 def logout_(request: HttpRequest):
     logout(request)
     return redirect("app:signin")
-
-# user: compras_admin
-# password: comprasima2024
-# user: herramientas_admin
-# password: herramientasima2024
