@@ -1,4 +1,4 @@
-# Inventory developed for IMA company 🏢
+# Inventory for companies 🏢
 
 # Django App 🚀
 
