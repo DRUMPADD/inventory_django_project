@@ -1,0 +1,170 @@
+{% extends "includes/base.html" %}
+{% load static %}
+{% block title %}Historial{% endblock %}
+{% block styles %}
+<style>
+    .table-history {
+        width: 90%;
+        margin-top: 0;
+    }
+
+    .table-history .table {
+        height: 90vh;
+        margin-bottom: 0;
+    }
+
+    .input-search {
+        width: 100%;
+    }
+
+    .input-search > div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .input-search > div > * {
+        display: block;
+    }
+
+    .input-search > div > input {
+        width: 50%;
+        padding: 5px;
+        border: none;
+        font-size: 1em;
+        border-left: 2px solid #ccc;
+        border-top: 2px solid #ccc;
+        border-bottom: 2px solid #ccc;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+    }
+    .input-search > div > .icons {
+        position: relative;
+        border-left: 2px solid #ccc;
+        border-top: 2px solid #ccc;
+        border-right: 2px solid #ccc;
+        border-bottom: 2px solid #ccc;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+    }
+    
+    .input-search > div > .icons > ion-icon {
+        padding: 5px;
+        opacity: 0;
+        font-size: 1.5em;
+        transition: opacity .6s linear;
+    }
+    .input-search > div > .icons > ion-icon:not(.show) {
+        width: 0;
+        height: 0;
+        padding: 0;
+    }
+
+    .input-search > div > .icons > ion-icon.show {
+        opacity: 1;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h1 class="text-center">Historial de movimientos</h1>
+    <div class="table-container table-history">
+        <div class="input-search">
+            <div>
+                <input type="text" name="searchData" placeholder="Buscar...">
+                <div class="icons">
+                    <ion-icon name="search-outline" class="show"></ion-icon>
+                    <ion-icon name="close-outline"></ion-icon>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Usuario</th>
+                        <th>Producto</th>
+                        <th>Descripción</th>
+                        <th>Fecha y hora</th>
+                    </tr>
+                </thead>
+                <tbody id="data-list">
+                    {% for h in history %}
+                        {% if h.venta %}
+                            <tr>
+                                <td>{{ h.pk }}</td>
+                                <td>{{ h.usuario__name_user }}</td>
+                                <td>{{ h.venta__producto__descripcion }}</td>
+                                <td>{{ h.descripcion }}</td>
+                                <td>{{ h.fecha_hora|date:"j F o h:i A" }}</td>
+                            </tr>
+                        {% elif h.renta %}
+                            <tr>
+                                <td>{{ h.pk }}</td>
+                                <td>{{ h.usuario__name_user }}</td>
+                                <td>{{ h.renta__producto__descripcion }}</td>
+                                <td>{{ h.descripcion }}</td>
+                                <td>{{ h.fecha_hora|date:"j F o h:i A" }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td>{{ h.pk }}</td>
+                                <td>{{ h.usuario__name_user }}</td>
+                                <td>{% if 'Registró' in h.descripcion %} {{ h.descripcion|cut:"Registró nuevo producto: "|capfirst }} {% elif 'Modificó' in h.descripcion %} {{ h.descripcion|cut:"Modificó"|capfirst }}{% elif 'Eliminó' in h.descripcion %} {{ h.descripcion|cut:"Eliminó"|capfirst }} {% endif %}</td>
+                                <td>{{ h.descripcion }}</td>
+                                <td>{{ h.fecha_hora|date:"j F o h:i A" }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+    <script>
+        const inputSearch = document.querySelector('[name="searchData"]');
+        const iconSearch = document.querySelector('[name="search-outline"]');
+        const iconClose = document.querySelector('[name="close-outline"]');
+        const tableInfo = document.querySelectorAll('table tbody tr');
+
+        function showTableInfo(value) {
+            if(value) {
+                tableInfo.forEach(element => {
+                    if(element.textContent.toLowerCase().indexOf(value.toLowerCase()) > -1) {
+                        element.style.display = 'table-row';
+                    } else {
+                        element.style.display = 'none';
+                    }
+                })
+            } else {
+                tableInfo.forEach(element => {
+                    element.style.display = 'table-row';
+                })
+            }
+        }
+
+        inputSearch.addEventListener('keyup', function(e) {
+            const value = String(e.target.value);
+            if(value.trim() != "") {
+                iconSearch.classList.remove('show');
+                iconClose.classList.add('show');
+                showTableInfo(value)
+            } else {
+                showTableInfo('')
+                iconSearch.classList.add('show');
+                iconClose.classList.remove('show');
+            }
+        })
+
+        iconClose.addEventListener('click', () => {
+            inputSearch.value = '';
+            showTableInfo('')
+        })
+    </script>
+{% endblock %}

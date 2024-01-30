@@ -1,0 +1,129 @@
+{% load static %}
+{% if user.is_superuser %}
+<form class="form-item">
+    {% csrf_token %}
+    <h1>{% if item %}Actualizar equipo: {{ item.descripcion }} {% else %}Registrar equipo{% endif %}</h1>
+    {% if not item %}
+    <div class="box">
+        <div class="box-content">
+            <section>
+                <label>Tipo de registro<span class="required">*</span></label>
+                <select name="sl_opcion" class="select-required" id="sl_opcion" required>
+                    <option selected disabled>Elige una opción</option>
+                    <option value="1">Ingreso</option>
+                    <option value="2">Renta</option>
+                </select>
+            </section>
+        </div>
+    </div>
+    {% endif %}
+    <div class="box">
+        <div class="box-content">
+            <section>
+                <label for="articulo">Equipo<span class="required">*</span></label>
+                <input type="text" id="articulo" name="articulo" {% if item %} value="{{ item.descripcion }}" {% endif %} value="{{ item.descripcion }}" required>
+            </section>
+            <section>
+                <label for="codigo">Código<span class="required">*</span></label>
+                <input type="text" id="codigo" name="codigo" {% if item %} value="{{ item.codigo|default:'' }}" {% endif %} class="input-required" required>
+            </section>
+        </div>
+        <div class="box-content">
+            <section>
+                <label for="area">Área</label>
+                <input type="text" id="area" name="area" {% if item %} value="{{ item.area }}" {% endif %}>
+            </section>
+            <section>
+                <label for="marca">Marca</label>
+                <input type="text" id="marca" name="marca" {% if item %} value="{{ item.marca }}" {% endif %}>
+            </section>
+            <section>
+                <label for="cantidad">Cantidad</label>
+                <input type="number" id="cantidad" name="cantidad" step="any" {% if tool %} value="{{ tool.cantidad }}" {% endif %}>
+            </section>
+        </div>
+        <div class="box-content">
+            <section>
+                <label for="modelo">Modelo</label>
+                <input type="text" id="modelo" name="modelo" {% if item %} value="{{ item.modelo }}" {% endif %} value="{{ item.modelo }}">
+            </section>
+            <section>
+                <label for="proyecto">Proyecto</label>
+                <input type="text" id="proyecto" name="proyecto" {% if item %} value="{{ item.proyecto }}" {% endif %}>
+            </section>
+        </div>
+        <div class="box-content">
+            <section>
+                <label for="resguardo">Resguardo</label>
+                <input type="text" id="resguardo" name="resguardo" {% if item %} value="{{ item.resguardo }}" {% endif %}>
+            </section>
+        </div>
+        <div class="box-content">
+            <section>
+                <label for="oc">Orden de compra (OC)</label>
+                <input type="text" name="oc" id="oc" {% if item %} value="{{ item.orden_compra }}" {% endif %}>
+                <select name="sl_opcion_oc" id="sl_opcion_oc" >
+                    <option value="Consignado" {% if item.tipo_orden_compra == 'Consignado' %}selected{% endif %}>Consignado</option>
+                    <option value="Crédito" {% if item.tipo_orden_compra == 'Crédito' %}selected{% endif %}>Crédito</option>
+                    <option value="Contado" {% if item.tipo_orden_compra == 'Contado' %}selected{% endif %}>Contado</option>
+                </select>
+            </section>
+        </div>
+    </div>
+    <div class="box">
+        <div class="box-content">
+            <section>
+                <label for="noserie">No. serie</label>
+                <input type="text" id="noserie" name="noserie" {% if item %} value="{{ item.no_serie }}" {% endif %}>
+            </section>
+            <section>
+                <label for="noseriei">No. serie interno<span class="required">*</span></label>
+                <input type="text" id="noseriei" name="noseriei" {% if item %} value="{{ item.no_serie_interno }}" {% endif %} required>
+            </section>
+        </div>
+        <div class="box-content">
+            <section>
+                <label for="proveedor">Proveedor</label>
+                <select name="proveedor" id="proveedor">
+                    {% if suppliers|length %} <option value="" {% if item.proveedor__folio is None %} selected {% endif %}>Sin proveedor</option>{% endif %}
+                    {% for supplier in suppliers %}
+                    <option value="{{ supplier.folio }}" {% if item.proveedor__folio == supplier.folio %} selected {% endif %}>{{ supplier.nombre }}</option>
+                    {% empty %}
+                    <option selected disabled>No hay proveedores registrados</option>
+                    {% endfor %}
+                </select>
+            </section>
+        </div>
+    </div>
+    <div class="box">
+        <div class="box-content">
+            <section>
+                <label for="status">Status</label>
+                <select name="status" id="status">
+                    <option value="Listo" {% if item.status == 'Listo' %}selected{% endif %}>Listo</option>
+                    <option value="Mantenimiento" {% if item.status == 'Mantenimiento' %}selected{% endif %}>Mantenimiento</option>
+                    <option value="Producto no conforme" {% if item.status == 'Producto no conforme' %}selected{% endif %}>Producto no conforme</option>
+                </select>
+            </section>
+        </div>
+        <div class="box-content">
+            <section>
+                <label for="fsalida">Fecha de salida</label>
+                <input type="date" id="fsalida" name="fsalida" style="--calendar-logo: url({% static 'img/calendar.png' %})">
+            </section>
+        </div>
+        <div class="box-content">
+            <section>
+                <label for="fregreso">Fecha de regreso</label>
+                <input type="date" id="fregreso" name="fregreso" style="--calendar-logo: url({% static 'img/calendar.png' %})">
+            </section>
+        </div>
+    </div>
+    <div class="box">
+        <div class="btns-form">
+            <button type="submit">Registrar</button>
+            <button type="button" class="close-form-container">Cerrar</button>
+        </div>
+    </div>
+</form>
+{% endif %}

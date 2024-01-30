@@ -1,0 +1,74 @@
+.table-products {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.product-list {
+    position: relative;
+    margin: 40px auto;
+    width: 550px;
+    height: 200px;
+    max-height: 400px;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 10px -10px #0a33e8,
+    -10px 10px #0a33e8;
+}
+
+.product-list > .info-product {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0,max-content));
+    justify-items: center;
+    width: 100%;
+    font-weight: 600;
+    border-radius: 5px;
+    box-shadow: 0 3px 4px #000000;
+}
+
+.product-list > .info-product span {
+    padding: 1px;
+    width: 200px;
+}
+.product-list .title-list {
+    height: 36px;
+    text-align: center;
+    font-weight: 800
+}
+
+.product-list > .products {
+    height: 70%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.product-list > .products::-webkit-scrollbar {
+    appearance: none;
+    width: 10px;
+}
+.product-list > .products::-webkit-scrollbar-thumb {
+    background: #4a4a4a;
+    border-radius: 14px;
+}
+
+.product-list .products > .info-product {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0,max-content));
+    width: 100%;
+    place-content: center;
+    padding: 4px 0px;
+    color: #000;
+}
+.product-list .products > .info-product span {
+    width: 200px;
+}
+.product-list .products > .info-product:nth-child(even) {
+    background: #f8df1e;
+    color: #000;
+    border-radius: 5px;
+}
+
+.info-product .text-product {
+    place-self: center;
+    text-align: center;
+}

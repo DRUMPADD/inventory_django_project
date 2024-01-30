@@ -1,0 +1,41 @@
+{% extends "includes/base.html" %}
+{% load static %}
+
+{% block title %}Inicio{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/alerts.css' %}">
+{% endblock %}
+{% block navbar %}{% endblock %}
+{% block content %}
+<div class="logo" style="--url-img: url({% static 'img/logo_imap.png' %})"></div>
+    <form method="post">
+        {% csrf_token %}
+        <h2>Iniciar sesión</h2>
+        <div class="box-input">
+            <input type="text" name="username" class="input-text" required>
+            <p></p>
+            <label>Usuario</label>
+        </div>
+        <div class="box-input">
+            <input type="password" name="password" required>
+            <p></p>
+            <label>Contraseña</label>
+        </div>
+        <div class="box-input submit">
+            <input type="submit" value="Iniciar sesión">
+            <p class="ball"></p>
+            <p class="ball2"></p>
+        </div>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </form>
+{% endblock  %}
+{% block scripts %}
+<script src="{% static 'js/alerts.js' %}"></script>
+{% endblock %}

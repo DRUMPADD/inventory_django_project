@@ -1,0 +1,638 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+}
+
+button,
+input,
+select {
+    outline: none;
+    border: 1px solid;
+}
+
+a {
+    text-decoration: none;
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    width: 300px;
+    height: 100vh;
+    background: #1747a6;
+}
+
+
+nav .logo {
+    margin: 30px auto;
+    width: 150px;
+    height: 150px;
+    background: #fff;
+    border-radius: 50%;
+    padding: 4px;
+    animation: scale-image linear .7s;
+}
+
+@keyframes scale-image {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+nav .logo .logo-content {
+    background: var(--url-img);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    mix-blend-mode: multiply;
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    padding: 10px;
+}
+
+@keyframes rotate-image {
+    0% {
+        rotate: 0;
+    }
+    100% {
+        rotate: 360deg;
+    }
+}
+
+nav .title {
+    color: #fff;
+    text-align: center;
+    font-size: 34px;
+}
+
+nav .links-box {
+    height: calc(100vh - 257px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+nav .links .link {
+    position: relative;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #fff;
+    padding: 5px;
+}
+
+.links .link::before {
+    position: absolute;
+    content: "";
+    top: -20px;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    background: transparent;
+}
+.links .link::after {
+    position: absolute;
+    content: "";
+    bottom: -20px;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    background: transparent;
+}
+
+.links .link ion-icon {
+    background-color: #ffffff;
+    color: #1747a6;
+    border-radius: 50px;
+    font-size: 30px;
+    padding: 4px;
+    transition: .3s linear;
+}
+
+.links .link span:nth-child(1) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+@keyframes scale-icon-links {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+.links a span:nth-child(2) {
+    font-weight: 700;
+    transition: .3s linear;
+}
+
+.links .link span:nth-child(2) {
+    font-weight: 700;
+    transition: all .3s linear;
+}
+
+@keyframes scale-text-links {
+    from {
+        transform: translateX(10px);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+.links .link:hover span:nth-child(2){
+    transform: translateX(20px);
+}
+.links .link.active {
+    background: #ffffff;
+    color: #1747a6;
+}
+.links .link.active ion-icon {
+    background: #1747a6;
+    color: #fff
+}
+
+.links .link.active::before {
+    border-bottom-right-radius: 10px;
+    box-shadow: 5px 5px 0 5px #fff;
+}
+.links .link.active::after {
+    border-top-right-radius: 10px;
+    box-shadow: 5px -5px 0 5px #fff;
+}
+
+.text-center {
+    text-align: center;
+    font-size: 3rem
+}
+
+.container {
+    position: fixed;
+    left: 300px;
+    width: calc(100% - 300px);
+    height: 100vh;
+    min-height: 100vh;
+    overflow-y: scroll;
+}
+
+.form-select {
+    min-width: 70px;
+    width: 15%;
+    border: none;
+    font-weight: 600;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* FORM */
+input[type="date"] {
+    background: var(--calendar-logo);
+    background-repeat: no-repeat;
+    background-size: 30px;
+    background-position: right;
+    color: #000;
+    border: 1px solid #1747a6;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    cursor: pointer;
+}
+
+.form-container {
+    position: absolute;
+    margin-left: 300px;
+    width: calc(100% - 300px);
+    min-height: 0;
+    height: 100%;
+    opacity: 0;
+    background: #ffffffa0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    transition: all .3s linear;
+}
+
+.form-container.opened {
+    opacity: 1;
+    scale: 1;
+    pointer-events: auto;
+    /* z-index: 1; */
+    transition: all .3s linear;
+}
+
+.form-container form {
+    position: relative;
+    border-radius: 20px;
+    box-shadow: 4px 4px 2px #828283,
+    -4px -4px 2px #828283;
+    margin: auto;
+    padding: 14px;
+    height: auto;
+    width: 60%;
+    opacity: 0;
+    background: #fff;
+    overflow-y: scroll;
+    transition: all .3s linear;
+}
+
+.form-container form.supplier-form {
+    transform: translateY(-100%);
+    width: 50%;
+}
+
+.form-container form::-webkit-scrollbar {
+    appearance: none;
+    width: 0;
+}
+
+.form-container.opened form.supplier-form {
+    transform: translateY(0)
+}
+
+@media (max-width: 1287px) {
+    .form-container form {
+        width: 75%;
+        overflow-y: scroll;
+        max-height: 700px;
+    }
+}
+
+.form-container.opened form {
+    opacity: 1;
+}
+
+form h1 {
+    text-align: center;
+}
+
+form > .box {
+    margin: 0 auto;
+    width: 100%;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.form-container form .box > section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.form-container form .box > section select {
+    position: relative;
+    padding: 10px 20px;
+    outline: none;
+    /* border: 1px solid #000; */
+    border-radius: 5px;
+    font-weight: 600;
+    appearance: none;
+}
+
+
+.box .box-content section label .required {
+    color: #f00;
+    font-weight: 500
+}
+
+form .box > .box-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    margin: 10px auto;
+}
+
+form .box .box-content section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    width: 100%;
+}
+
+.box .box-content section label {
+    width: 44%;
+    transition: .3s linear;
+}
+.box .box-content section input,
+.box .box-content section select {
+    width: 100%;
+}
+.box .box-content section label,
+.box .box-content section input,
+.box .box-content section select {
+    font-size: 15px;
+    font-weight: 600;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.box .box-content section label {
+    text-align: center;
+    letter-spacing: 1px;
+    border: 1px solid #000;
+}
+
+form .btns-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10%;
+}
+
+.btns-form button {
+    padding: 1em 2em;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.btns-form button:nth-child(1) {
+    background: #1f5fe0;
+}
+.btns-form button:nth-child(2) {
+    background: #f00234;
+}
+
+/* END FORM */
+
+/* BUTTONS */
+.table-container > .btns {
+    width: 100%;
+}
+
+.btns.flex-between {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btns button {
+    padding: 12px;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 1em;
+    font-weight: 700;
+    letter-spacing: .5px;
+    cursor: pointer;
+}
+
+@keyframes translate-buttons {
+    from {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.btns button:nth-child(1) {
+    background: #000000
+}
+
+.btns .btn-back {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    background: transparent;
+    display: flex;
+    border-radius: 50%;
+    align-items: center;
+}
+
+.btns .btn-back ion-icon {
+    font-size: 2em;
+    background: #ffc800;
+    padding: 5px;
+    border-radius: 50%;
+    color: #000;
+}
+
+.btns button:nth-child(2) {
+    background: #1f5fe0
+}
+/* END BUTTONS */
+
+/* TABLE */
+.table-container {
+    width: 70%;
+    margin: 0 auto;
+    margin-top: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 4px;
+    transition: .3s linear;
+}
+
+.table-container .table {
+    height: 300px;
+    width: 100%;
+    margin-bottom: 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.table-container .table::-webkit-scrollbar {
+    appearance: none;
+    width: 10px;
+}
+.table-container .table::-webkit-scrollbar-thumb {
+    background: #1f5fe0a7;
+    border-radius: 10px;
+}
+
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 5px 10px #92949a;
+}
+
+table {
+    transition: .3s linear;
+    animation: scale-table .6s linear;
+}
+
+@keyframes scale-table {
+    from {
+        scale: 0;
+    }
+    to {
+        scale: 1;
+    }
+}
+
+table thead {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    box-shadow: 0 5px 10px #92949a;
+}
+
+table tbody tr:nth-child(even) {
+    background: #f0f8fe;
+}
+
+table thead th,
+table tbody td {
+    width: auto;
+    padding: 1rem;
+    text-align: center;
+}
+
+table thead th {
+    text-transform: uppercase;
+    letter-spacing: .8px;
+}
+
+
+table tbody,
+table tbody tr {
+    transition: .3s linear;
+}
+
+table tbody .btns {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 4px;
+}
+
+table tbody td .status {
+    padding: 0.2rem 1rem;
+    border-radius: 5px;
+}
+
+.status.status-success {
+    background: #bbf7c5;
+    color: #0a8a20
+}
+.status.status-warning {
+    color: #a68b00;
+    background: #fff0c2;
+}
+.status.status-error {
+    color: #c62828;
+    background: #fcb9ca;
+}
+
+table tbody .btns button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent !important;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+}
+
+table tbody .btns button i {
+    width: 100%;
+    font-size: 1.5rem;
+    padding: 5px;
+    border-radius: 50%;
+    background: transparent;
+    transition: all .3s linear;
+}
+table tbody .btns button:nth-child(1) i {
+    /* color: #0cea7f; */
+    color: #0c91ea;
+}
+
+table tbody .btns button:nth-child(2) i {
+    padding: 5px 7px;
+    color: #f00234;
+}
+table tbody .btns button:hover i {
+    background: #fff;
+    box-shadow: 1px 1px 10px #020202;
+}
+/* ?? END TABLE */
+
+/* ?? CONTAINER TOOL */
+.container.tool > h2 {
+    text-align: center;
+    font-size: 2rem
+}
+
+.tool-content-info {
+    width: 70%;
+    margin: 0 auto;
+}
+
+.tool-content-info.flex {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.tool-content-info p {
+    font-size: 1.3rem;
+}
+
+.tool-content-info > .content {
+    border-top: 1px solid ;
+    position: relative;
+    font-size: 1.3rem;
+    padding: 10px;
+    display: flex;
+    align-items: start;
+    gap: 5px
+}
+
+.tool-content-info > .content:last-child {
+    flex-direction: column;
+}
+.tool-content-info > .content#item:last-child {
+    flex-direction: row;
+}
+.tool-content-info > .content:last-child span:nth-child(2) {
+    text-align: justify;
+}
+
+.tool-content-info p .title-tool {
+    font-weight: 600
+}
+
+/* ?? END CONTAINER TOOL */
+
+/* ?? TOOLS */
+.btn-tools {
+    position: fixed;
+    right: 18px;
+    bottom: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    width: 10%;
+    z-index: -1;
+}
+.btn-tools button {
+    display: inline-block;
+    width: 100%;
+    font-size: .9vw;
+}
+/* ?? END TOOLS */

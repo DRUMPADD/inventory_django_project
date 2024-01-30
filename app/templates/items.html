@@ -1,0 +1,116 @@
+{% extends "includes/base.html" %}
+{% load static %}
+{% block title %}Herramienta{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/tables.css' %}">
+{% endblock %}
+{% block content %}
+<span hidden class="url-add-item">{% url 'app:add_item' %}</span>
+<div class="container">
+    <h1 class="text-center">Almacen IMA</h1>
+    <div class="table-container">
+        <div class="btns flex-between">
+            <div>
+                <button type="button" {% if not user.is_superuser %}
+                disabled {% endif %} class="open-form-container">Agregar equipo</button>
+                <button type="button" {% if not user.is_superuser %}
+                disabled {% endif %}  class="open-form-container">Agregar proveedor</button>
+            </div>
+            <select name="sl_filter_option" class="form-select" id="sl_filter_option">
+                <option selected value="">Todos</option>
+                {% for code in codes %}
+                    <option value="{{ code.codigo }}">{{ code.codigo }} ({{ code.code }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Producto</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>Status</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="data-list">
+                    {% for item in items %}
+                        <tr data-code="{{ item.codigo|default:'' }}">
+                            <td>{{ item.pk }}</td>
+                            <td>{{ item.descripcion }}</td>
+                            <td>{{ item.marca }}</td>
+                            <td>{{ item.modelo }}</td>
+                            <td><p class="status status-{% if item.status == 'Listo' %}success{% elif item.status == 'Mantenimiento' %}warning{% else %}error{% endif %}">{{ item.status }}</p></td>
+                            <td class="btns">
+                                <button><a href="{% url 'app:item' id_item=item.pk %}"><i class="fa-solid fa-eye"></i></a></button>
+                                {% if user.is_superuser %}
+                                <button><a href="{% url 'app:delete_product' id_product=item.pk %}"><i class="fa-solid fa-trash"></i></a></button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <section>
+        <div class="table-products">
+            {% comment %}
+            <div class="product-list">
+                <h3 class="title-list">Disponibles</h3>
+                <div class="info-product">
+                    <span class="text-product">Herramienta</span>
+                    <span class="text-product">Tamaño</span>
+                    <span class="text-product">Cantidad</span>
+                </div>
+                <div class="products">
+                    {% for product in items_filtered %}
+                        <p class="info-product">
+                            <span class="text-product">{{ product.descripcion }}</span>
+                            <span class="text-product">{{ product.tamanio }}</span>
+                            <span class="text-product">{{ product.descripcion__count }}</span>
+                        </p>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endcomment %}
+            {% include "includes/tables/table_products.html" with filter=True is_movement=False query=items_filtered title='Disponibles' %}
+            {% include "includes/tables/table_products.html" with filter=True is_movement=True query=items_filtered_rented title='Rentados' %}
+            {% comment %}
+            <div class="product-list">
+                <h3 class="title-list">Rentadas</h3>
+                <div class="info-product">
+                    <span class="text-product">Herramienta</span>
+                    <span class="text-product">Tamaño</span>
+                    <span class="text-product">Cantidad</span>
+                </div>
+                <div class="products">
+                    {% for product in items_filtered_rented %}
+                        <p class="info-product">
+                            <span class="text-product">{{ product.producto__descripcion }}</span>
+                            <span class="text-product">{{ product.producto__tamanio }}</span>
+                            <span class="text-product">{{ product.producto__descripcion__count }}</span>
+                        </p>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endcomment %}
+        </div>
+    </section>
+</div>
+<div class="form-container">
+    {% include "includes/forms/form_item.html" %}
+</div>
+<div class="form-container">
+    {% include "includes/forms/form_supplier.html" %}
+</div>
+{% endblock %}
+{% block scripts %}
+    {% if user.is_superuser %}
+        <script src="{% static 'js/actions_forms.js' %}"></script>
+        <script src="{% static 'js/items.js' %}"></script>
+    {% endif %}
+    <script src="{% static 'js/filters.js' %}"></script>
+{% endblock %}

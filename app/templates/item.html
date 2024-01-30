@@ -1,0 +1,75 @@
+{% extends "includes/base.html" %}
+{% load static %}
+{% block title %}Equipo: {{ item.descripcion }}{% endblock %}
+
+
+{% block content %}
+    <span hidden class="url-update-item">{% url 'app:update_item' id_item=item.pk %}</span>
+    <div class="container tool" id="product-info">
+        <h2>{{ item.descripcion }}</h2>
+        <div class="btns">
+            <a href="{% url 'app:items' %}" class="btn-back"><ion-icon name="arrow-undo-outline"></ion-icon></a>
+        </div>
+        <div class="tool-content-info">
+            <p class="content">
+                <span class="title-tool">Código:</span>
+                <span>{{ item.codigo|default:"" }}</span>
+            </p>
+            <p class="content">
+                <span class="title-tool">No. serie:</span>
+                <span>{{ item.no_serie|default:"" }}</span>
+            </p>
+            <p class="content">
+                <span class="title-tool">Área:</span>
+                <span>{{ item.area|default:"" }}</span>
+            </p>
+            <p class="content">
+                <span class="title-tool">Marca:</span>
+                <span>{{ item.marca|default:"" }}</span>
+            </p>
+            <p class="content">
+                <span class="title-tool">Modelo:</span>
+                <span>{{ item.modelo|default:"" }}</span>
+            </p>
+            <p class="content">
+                <span class="title-tool">Proyecto:</span>
+                <span>{{ item.proyecto|default:"" }}</span>
+            </p>
+            <p class="content">
+                <span class="title-tool">Resguardo:</span>
+                <span>{{ item.resguardo|default:"" }}</span>
+            </p>
+            <p class="content">
+                <span class="title-tool">No. serie interno:</span>
+                <span>{{ item.no_serie_interno|default:"" }}</span>
+            </p>
+            <p class="content">
+                <span class="title-tool">Proveedor:</span>
+                <span>{{ item.proveedor__nombre|default:"" }}</span>
+            </p>
+            <p class="content">
+                <span class="title-tool">Orden de compra (OC):</span>
+                <span>{{ item.orden_compra|default:"" }} <span>{{ item.tipo_orden_compra|default:"" }}</span></span>
+            </p>
+            <p class="content" id="item">
+                <span class="title-tool">Status:</span>
+                <span>{{ item.status|default:"" }}</span>
+            </p>
+        </div>
+        {% if user.is_superuser %}
+        <div class="btn-tools btns">
+            <button type="button" class="open-form-container">Actualizar datos</button>
+        </div>
+        {% endif %}
+    </div>
+    <div class="form-container">
+        {% include "includes/forms/form_item.html" with item=item %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {% if user.is_superuser %}
+        <script src="{% static 'js/actions_forms.js' %}"></script>
+        <script src="{% static 'js/item.js' %}"></script>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends 'includes/base.html' %}
+{% load static %}
+{% block title %}Herramientas especiales{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/tables.css' %}">
+{% endblock %}
+{% block content %}
+<span hidden class="url-add-tool">{% url 'app:add_tool' %}</span>
+<div class="container">
+    <h1 class="text-center">Herramientas especiales</h1>
+    <div class="table-container">
+        <div class="btns flex-between">
+            <div>
+                <button type="button"{% if not user.is_superuser %}
+                disabled {% endif %} class="open-form-container">Agregar herramienta</button>
+                <button type="button" {% if not user.is_superuser %}
+                disabled {% endif %} class="open-form-container">Agregar proveedor</button>
+            </div>
+            <select name="sl_filter_option" class="form-select" id="sl_filter_option">
+                <option selected value="">Todos</option>
+                {% for code in codes %}
+                    <option value="{{ code.codigo }}">{{ code.codigo }} ({{ code.code }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Herramienta</th>
+                        <th>Tamaño</th>
+                        <th>Status</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="data-list">
+                    {% for tool in tools %}
+                        <tr data-code="{{ tool.codigo|default:'' }}">
+                            <td>{{ tool.pk }}</td>
+                            <td>{{ tool.descripcion }}</td>
+                            <td>{{ tool.tamanio }}</td>
+                            <td><p class="status status-{% if tool.status == 'Listo' %}success{% elif tool.status == 'Mantenimiento' %}warning{% else %}error{% endif %}">{{ tool.status }}</p></td>
+                            <td class="btns">
+                                <button><a href="{% url 'app:tool' id_tool=tool.pk %}"><i class="fa-solid fa-eye"></i></a></button>
+                                {% if user.is_superuser %}
+                                <button><a href="{% url 'app:delete_product' id_product=tool.pk %}"><i class="fa-solid fa-trash"></i></a></button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <section>
+        <h6 class="text-center h6">Filtrado de herramientas</h6>
+        <div class="table-products">
+            {% include "includes/tables/table_products.html" with filter=True is_movement=False query=products_filtered title='Disponibles' %}
+            {% include "includes/tables/table_products.html" with filter=True is_movement=True query=products_filtered_rented title='Rentadas' %}
+        </div>
+    </section>
+    <section>
+        <h6 class="text-center h6">Listado de herramientas</h6>
+        <div class="table-products">
+            <div class="product-list">
+                <h3 class="title-list">Disponibles</h3>
+                <div class="info-product">
+                    <span class="text-product">ID</span>
+                    <span class="text-product">Herramienta</span>
+                    <span class="text-product">Tamaño</span>
+                </div>
+                <div class="products">
+                    {% for product in products_available %}
+                        <a class="info-product" href="{% url 'app:tool' id_tool=product.pk %}">
+                            <span class="text-product">{{ product.pk }}</span>
+                            <span class="text-product">{{ product.descripcion }}</span>
+                            <span class="text-product">{{ product.tamanio }}</span>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% include "includes/tables/table_products.html" with filter=False option_selected=1 query=products_sold title='Vendidas' %}
+            {% include "includes/tables/table_products.html" with filter=False option_selected=2 query=products_rented title='Rentadas' %}
+        </div>
+    </section>
+</div>
+<div class="form-container">
+    {% include "includes/forms/form_tool.html" %}
+</div>
+
+<div class="form-container">
+    {% include "includes/forms/form_supplier.html" %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+    {% if user.is_superuser %}
+        <script src="{% static 'js/actions_forms.js' %}"></script>
+        <script src="{% static 'js/tools.js' %}"></script>
+    {% endif %}
+    <script src="{% static 'js/filters.js' %}"></script>
+{% endblock %}

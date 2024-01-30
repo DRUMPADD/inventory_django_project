@@ -1,0 +1,46 @@
+{% extends "includes/base.html" %}
+{% load static %}
+{% block title %}Registro de empleado{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+{% block navbar %}{% endblock %}
+{% block content %}
+    <div class="logo" style="--url-img: url({% static 'img/logo_imap.png' %})"></div>
+    <form method="post" class="form-signup" action="{% url 'app:signup' %}">
+        {% csrf_token %}
+        <h2>Registrar</h2>
+        <div class="box-input">
+            <input type="text" name="username" class="input-text" required>
+            <p></p>
+            <label>Usuario</label>
+        </div>
+        <div class="box-input">
+            <input type="text" name="name" class="input-text" required>
+            <p></p>
+            <label>Nombre</label>
+        </div>
+        <div class="box-input">
+            <input type="text" name="middle_name" class="input-text" required>
+            <p></p>
+            <label>Apellido paterno</label>
+        </div>
+        <div class="box-input">
+            <input type="text" name="last_name" class="input-text" required>
+            <p></p>
+            <label>Apellido materno</label>
+        </div>
+        <div class="box-input">
+            <input type="password" name="password" required>
+            <p></p>
+            <label>Contraseña</label>
+        </div>
+        <div class="box-input submit">
+            <input type="submit" value="Registrarse">
+            <p class="ball"></p>
+            <p class="ball2"></p>
+        </div>
+    </form>
+{% endblock %}
+{% block scripts %}
+{% endblock %}

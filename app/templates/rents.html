@@ -1,0 +1,14 @@
+{% extends "includes/base.html" %}
+{% load static %}
+{% block title %}Rentas{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/cards.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <h1 class="text-center">Herramientas y equipos rentados</h1>
+        {% include "includes/tables/table_movements.html" with is_rent=True movements=rents %}
+    </div>
+{% endblock %}
+{% block scripts %}
+{% endblock %}

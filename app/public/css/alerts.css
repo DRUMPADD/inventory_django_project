@@ -1,0 +1,16 @@
+.alert {
+    border: 1px solid;
+    border-radius: 10px;
+    width: 100%;
+    padding: 4px;
+    font-weight: 600
+}
+
+.alert-warning {
+    background: #ffda6a;
+}
+
+.alert.alert-warning {
+    border-color: #c79500;
+    overflow: hidden;
+}

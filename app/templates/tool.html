@@ -1,0 +1,78 @@
+{% extends "includes/base.html" %}
+{% load static %}
+{% block title %}Herramienta: {{ tool.descripcion }}{% endblock %}
+{% block content %}
+<span hidden class="url-update-tool">{% url 'app:update_tool' id_tool=tool.pk %}</span>
+    <div class="container tool" id="product-info">
+        <h2>{{ tool.descripcion }}</h2>
+        <div class="btns">
+            <a href="{% url 'app:tools' %}" class="btn-back"><ion-icon name="arrow-undo-outline"></ion-icon></a>
+        </div>
+        <div class="tool-content-info flex">
+            <p>
+                <span class="title-tool">Código:</span>
+                <span>{{ tool.codigo|default:"" }}</span>
+            </p>
+            <p>
+                <span class="title-tool">Tamaño:</span>
+                <span>{{ tool.tamanio }}</span>
+            </p>
+            <p>
+                <span class="title-tool">Libraje:</span>
+                <span>{{ tool.libraje }}</span>
+            </p>
+            <p>
+                <span class="title-tool">Cantidad:</span>
+                <span>{{ tool.cantidad|default:0 }}</span>
+            </p>
+        </div>
+        <div class="tool-content-info">
+            <p class="content">
+                <span class="title-tool">Conexión:</span>
+                <span>{{ tool.conexion }}<span>{{ tool.conexion_medida }}</span></span>
+            </p>
+            <p class="content">
+                <span class="title-tool">No. serie:</span>
+                <span>{{ tool.no_serie|default:"" }}</span>
+            </p>
+            <p class="content">
+                <span class="title-tool">No. serie interno:</span>
+                <span>{{ tool.no_serie_interno|default:"" }}</span>
+            </p>
+            <p class="content">
+                <span class="title-tool">Proveedor:</span>
+                <span>{{ tool.proveedor__nombre|default:"Sin proveedor" }}</span>
+            </p>
+            <p class="content">
+                <span class="title-tool">Orden de compra (OC):</span>
+                <span>{{ tool.orden_compra|default:"" }} <span>{{ tool.tipo_orden_compra|default:"" }}</span></span>
+            </p>
+            <p class="content">
+                <span class="title-tool">Status:</span>
+                <span>{{ tool.status|default:"" }}</span>
+            </p>
+            <p class="content">
+                <span class="title-tool">Pozo:</span>
+                <span>{{ tool.pozo|default:"" }}</span>
+            </p>
+            <p class="content">
+                <span class="title-tool">Observaciones:</span>
+                <span>{{ tool.observaciones|default:"Sin observaciones" }}</span>
+            </p>
+        </div>
+        {% if user.is_superuser %}
+        <div class="btns btn-tools">
+            <button type="button" class="open-form-container">Actualizar datos</button>
+        </div>
+        {% endif %}
+    </div>
+    <div class="form-container">
+        {% include "includes/forms/form_tool.html" with tool=tool %}
+    </div>
+{% endblock %}
+{% block scripts %}
+    {% if user.is_superuser %}
+        <script src="{% static 'js/actions_forms.js' %}"></script>
+        <script src="{% static 'js/tool.js' %}"></script>
+    {% endif %}
+{% endblock %}

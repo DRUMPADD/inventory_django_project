@@ -1,0 +1,40 @@
+<div class="table-container">
+    <div class="table">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Producto</th>
+                    <th>No. serie</th>
+                    <th>Fecha de salida</th>
+                    {% if is_rent %}
+                    <th>Fecha de regreso</th>
+                    {% endif %}
+                    {% if user.is_superuser %}
+                    {% endif %}
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="data-list">
+                {% for movement_info in movements %}
+                    <tr>
+                        <td>{{ movement_info.pk }}</td>
+                        <td>{% if movement_info.producto__categoria == 'HERRAMIENTA' %}Herramienta{% else %}Equipo{% endif %}: {{ movement_info.producto__descripcion|default:"" }}</td>
+                        <td>{{ movement_info.producto__no_serie|default:"" }}</td>
+                        <td>{{ movement_info.fecha_salida|default:"Sin fecha" }}</td>
+                        {% if is_rent %}
+                        <td>{{ movement_info.fecha_regreso|default:"Sin fecha" }}</td>
+                        {% endif %}
+                        <td class="btns">
+                            {% if is_rent %}
+                            <button><a href="{% url 'app:movement' id_mov=movement_info.pk option=2 %}"><i class="fa-solid fa-eye"></i></a></button>
+                            {% else %}
+                            <button><a href="{% url 'app:movement' id_mov=movement_info.pk option=1 %}"><i class="fa-solid fa-eye"></i></a></button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
