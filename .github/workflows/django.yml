@@ -1,4 +1,4 @@
-name: Django CI
+name: Django Inventory IMA
 
 on:
   push:
