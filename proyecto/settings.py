@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,12 +21,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-io&!o9dv-4-w7u)tcwrv)tj#2@7=c-)qay3)lg#=zvo&71!n$t'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'v-s5ao5y5d9rj=uh6hta1_ecf154zegtw+#a65%u^t6u21**o)')
 
 # SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = str(os.environ.get('DEBUG')) == '1'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+ALLOWED_HOSTS += [os.environ.get('DJANGO_ALLOWED_HOST')]
 
 
 # Application definition
@@ -38,7 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'storages',
     'app',
+
 ]
 
 AUTH_USER_MODEL = 'app.MyCustomUser'
@@ -84,9 +89,17 @@ WSGI_APPLICATION = 'proyecto.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.environ.get('MYSQL_NAME'),
+        'USER': os.environ.get('MYSQL_USER'),
+        'PASSWORD': os.environ.get('MYSQL_PASSWORD'),
+        'HOST': os.environ.get('MYSQL_HOST'),
+        'PORT': os.environ.get('MYSQL_PORT'),
     }
 }
 
@@ -136,6 +149,8 @@ STATIC_URL = "public/"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+STATIC_ROOT = os.path.join(str(os.environ.get("DJANGO_ALLOWED_HOST")),'staticfiles')
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "app", "public")
 ]
