@@ -5,6 +5,9 @@ const form = document.querySelector("#form-tool");
 const formItem = document.querySelector(".form-item");
 const formSupplier = document.querySelector(".supplier-form");
 
+/**
+ *  Each form is opened after click on container button open
+ */
 btnOpenContainer?.forEach((element, id) => {
     element.addEventListener("click", () => {
         formContainer[id]?.classList.toggle("opened")
@@ -17,7 +20,9 @@ btnCloseContainer?.forEach((element, id) => {
     })
 })
 
-// ?? Search all elements inside form that have required class added
+/**
+ * Search all elements inside form that have required class added
+ */
 form?.querySelectorAll(".required").forEach((element) => {
     // ?? Select each label that contains required class
     const label = element.parentElement;
