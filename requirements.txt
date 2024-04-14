@@ -5,3 +5,4 @@ mysqlclient==2.1.1
 sqlparse==0.4.3
 django-storages
 gunicorn
+boto3
