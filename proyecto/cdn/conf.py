@@ -9,5 +9,5 @@ AWS_S3_OBJECT_PARAMETERS = {
 }
 AWS_LOCATION = f"https://{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com"
 
-DEFAULT_FILE_STORAGE = "sigssmac.cdn.backends.MediaRootS3Boto3Storage"
-STATICFILES_STORAGE = "sigssmac.cdn.backends.StaticRootS3Boto3Storage"
+DEFAULT_FILE_STORAGE = "proyecto.cdn.backends.MediaRootS3Boto3Storage"
+STATICFILES_STORAGE = "proyecto.cdn.backends.StaticRootS3Boto3Storage"
