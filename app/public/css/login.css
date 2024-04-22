@@ -50,6 +50,7 @@ form {
 
 form.form-signup {
     gap: 20px;
+    margin: 0 auto;
 }
 
 form > h2 {
