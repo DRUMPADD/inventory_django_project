@@ -8,7 +8,8 @@ formItem?.addEventListener("submit", async(e) => {
             method: 'POST',
             headers: {
                 'X-CSRFToken': formItem["csrfmiddlewaretoken"].value,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'mode': 'same-origin',
             },
             body: JSON.stringify({
                 sl_opcion: formItem["sl_opcion"].value,
@@ -32,7 +33,6 @@ formItem?.addEventListener("submit", async(e) => {
         });
         if(response.status != 201) throw new Error(response.statusText);
         const data = await response.json();
-        console.log(data.message)
         await Swal.fire({
             title: response.status == 201 ? 'Éxito!' : null,
             icon: response.status == 201 ? 'success' : "warning",

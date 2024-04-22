@@ -7,7 +7,8 @@ formItem?.addEventListener("submit", async(e) => {
             method: 'PUT',
             headers: {
                 'X-CSRFToken': formItem["csrfmiddlewaretoken"].value,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'mode': 'same-origin',
             },
             body: JSON.stringify({
                 articulo: formItem["articulo"].value,

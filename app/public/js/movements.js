@@ -9,7 +9,8 @@ formMovement.addEventListener("submit", async (e) => {
             method: 'PUT',
             headers: {
                 'X-CSRFToken': formMovement["csrfmiddlewaretoken"].value,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'mode': 'same-origin',
             },
             body: JSON.stringify({
                 id_product: formMovement["sl_product"].value,

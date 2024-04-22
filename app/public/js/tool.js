@@ -9,7 +9,8 @@ form?.addEventListener("submit", async(e) => {
             method: 'PUT',
             headers: {
                 'X-CSRFToken': form["csrfmiddlewaretoken"].value,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'mode': 'same-origin',
             },
             body: JSON.stringify({
                 herramienta: form["herramienta"].value,
