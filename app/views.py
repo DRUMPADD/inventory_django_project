@@ -5,7 +5,6 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 from django.contrib import messages
 from . import models
-from .backends import MyUserBackend
 # Create your views here.
 @cache_control(no_cache=True, must_revalidate=True)
 def login_view(request: HttpRequest):
@@ -17,15 +16,16 @@ def login_view(request: HttpRequest):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect("app:tools")
+            next_url = request.GET.get("next", "app:tools")
+            return redirect(next_url)
         else:
             messages.warning(request, "El usuario o contraseña es incorrecto")
     return render(request, "accounts/login.html")
 
 @cache_control(no_cache=True, must_revalidate=True)
 def signup_view(request: HttpRequest):
-    # if request.user.is_authenticated:
-    #     return redirect("app:tools")
+    if request.user.is_authenticated:
+        return redirect("app:tools")
     if request.method == 'POST':
         username = request.POST.get("username")
         name = request.POST.get("name")
@@ -57,7 +57,7 @@ def index(request: HttpRequest):
     codes = models.Producto.products.get_codes('HERRAMIENTA')
     tools_filtered_rented = models.Renta.rents.filter_products_by_name_size_rented("HERRAMIENTA")
     tools_filtered = models.Producto.products.filter_products_by_name_size(models.Renta, models.Venta, "HERRAMIENTA")
-    context = {}
+    context: dict = {}
     context["tools"] = tools
     context["codes"] = codes
     context["suppliers"] = suppliers
@@ -71,7 +71,7 @@ def index(request: HttpRequest):
 @cache_control(no_cache=True, must_revalidate=True)
 @login_required(login_url="app:signin")
 def items(request: HttpRequest):
-    context = {}
+    context: dict = {}
     suppliers = models.Proveedor.objects.all()
     items = models.Producto.objects.filter(categoria="EQUIPO", disponible=True)
     items_filtered = models.Producto.products.filter_products_by_name_size(models.Renta, models.Venta, "EQUIPO")
@@ -87,7 +87,7 @@ def items(request: HttpRequest):
 @cache_control(no_cache=True, must_revalidate=True)
 @login_required(login_url="app:signin")
 def sales(request: HttpRequest):
-    context = {}
+    context: dict = {}
     sales_ = models.Venta.sales.get_all_products_sold()
     context["sales"] = sales_
     return render(request, "sales.html", context)
@@ -95,7 +95,7 @@ def sales(request: HttpRequest):
 @cache_control(no_cache=True, must_revalidate=True)
 @login_required(login_url="app:signin")
 def rents(request: HttpRequest):
-    context = {}
+    context: dict = {}
     rents_ = models.Renta.rents.get_all_products_rented()
     context["rents"] = rents_
     return render(request, "rents.html", context)
@@ -103,7 +103,7 @@ def rents(request: HttpRequest):
 @cache_control(no_cache=True, must_revalidate=True)
 @login_required(login_url="app:signin")
 def history(request: HttpRequest):
-    context = {}
+    context: dict = {}
     history = models.Historial.get_history(models.Historial)
     context["history"] = history
     return render(request, "history.html", context)
