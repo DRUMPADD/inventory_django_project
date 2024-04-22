@@ -1,4 +1,4 @@
-{% if user.is_superuser %}
+{% if user.is_staff %}
 <form class="supplier-form" action="{% url 'app:add_supplier' path_=request.get_full_path|cut:'/' %}" method="post">
     {% csrf_token %}
     <h1>Agregar proveedor</h1>

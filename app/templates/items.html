@@ -11,9 +11,9 @@
     <div class="table-container">
         <div class="btns flex-between">
             <div>
-                <button type="button" {% if not user.is_superuser %}
+                <button type="button" {% if not user.is_staff %}
                 disabled {% endif %} class="open-form-container">Agregar equipo</button>
-                <button type="button" {% if not user.is_superuser %}
+                <button type="button" {% if not user.is_staff %}
                 disabled {% endif %}  class="open-form-container">Agregar proveedor</button>
             </div>
             <select name="sl_filter_option" class="form-select" id="sl_filter_option">
@@ -45,7 +45,7 @@
                             <td><p class="status status-{% if item.status == 'Listo' %}success{% elif item.status == 'Mantenimiento' %}warning{% else %}error{% endif %}">{{ item.status }}</p></td>
                             <td class="btns">
                                 <button><a href="{% url 'app:item' id_item=item.pk %}"><i class="fa-solid fa-eye"></i></a></button>
-                                {% if user.is_superuser %}
+                                {% if user.is_staff %}
                                 <button><a href="{% url 'app:delete_product' id_product=item.pk %}"><i class="fa-solid fa-trash"></i></a></button>
                                 {% endif %}
                             </td>
@@ -108,7 +108,7 @@
 </div>
 {% endblock %}
 {% block scripts %}
-    {% if user.is_superuser %}
+    {% if user.is_staff %}
         <script src="{% static 'js/actions_forms.js' %}"></script>
         <script src="{% static 'js/items.js' %}"></script>
     {% endif %}

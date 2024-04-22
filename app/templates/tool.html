@@ -60,7 +60,7 @@
                 <span>{{ tool.observaciones|default:"Sin observaciones" }}</span>
             </p>
         </div>
-        {% if user.is_superuser %}
+        {% if user.is_staff %}
         <div class="btns btn-tools">
             <button type="button" class="open-form-container">Actualizar datos</button>
         </div>
@@ -71,7 +71,7 @@
     </div>
 {% endblock %}
 {% block scripts %}
-    {% if user.is_superuser %}
+    {% if user.is_staff %}
         <script src="{% static 'js/actions_forms.js' %}"></script>
         <script src="{% static 'js/tool.js' %}"></script>
     {% endif %}

@@ -1,5 +1,5 @@
 {% load static %}
-{% if user.is_superuser %}
+{% if user.is_staff %}
 <form class="form-item">
     {% csrf_token %}
     <h1>{% if item %}Actualizar equipo: {{ item.descripcion }} {% else %}Registrar equipo{% endif %}</h1>

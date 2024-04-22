@@ -56,7 +56,7 @@
                 <span>{{ item.status|default:"" }}</span>
             </p>
         </div>
-        {% if user.is_superuser %}
+        {% if user.is_staff %}
         <div class="btn-tools btns">
             <button type="button" class="open-form-container">Actualizar datos</button>
         </div>
@@ -68,7 +68,7 @@
 {% endblock %}
 
 {% block scripts %}
-    {% if user.is_superuser %}
+    {% if user.is_staff %}
         <script src="{% static 'js/actions_forms.js' %}"></script>
         <script src="{% static 'js/item.js' %}"></script>
     {% endif %}

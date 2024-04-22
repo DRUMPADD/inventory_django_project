@@ -31,7 +31,7 @@
             </section>
         </div>
     </section>
-    {% if user.is_superuser %}
+    {% if user.is_staff %}
         <form class="form-movement" style="border: 1px solid; border-radius: 14px; width: 600px; margin: 0 auto; margin-top: 50px; padding: 14px">
             <h1>Modificar datos</h1>
             {% csrf_token %}
@@ -72,7 +72,7 @@
 {% endblock %}
 
 {% block scripts %}
-    {% if user.is_superuser %}
+    {% if user.is_staff %}
         <script src="{% static 'js/movements.js' %}"></script>
     {% endif %}
 {% endblock %}

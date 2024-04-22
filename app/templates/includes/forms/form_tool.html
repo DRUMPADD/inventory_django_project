@@ -1,5 +1,5 @@
 {% load static %}
-{% if user.is_superuser %}
+{% if user.is_staff %}
 <form id="form-tool">
     {% csrf_token %}
     <h1>{% if tool %} Actualizar herramienta: {{ tool.descripcion }} {% else %} Registrar herramienta {% endif %}</h1>

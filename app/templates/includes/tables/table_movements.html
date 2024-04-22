@@ -10,9 +10,9 @@
                     {% if is_rent %}
                     <th>Fecha de regreso</th>
                     {% endif %}
-                    {% if user.is_superuser %}
-                    {% endif %}
+                    {% if user.is_staff %}
                     <th>Acciones</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody id="data-list">
