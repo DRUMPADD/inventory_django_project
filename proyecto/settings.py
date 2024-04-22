@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'storages',
     'app',
-
 ]
 
 AUTH_USER_MODEL = 'app.MyCustomUser'
@@ -100,6 +99,7 @@ DATABASES = {
         'PASSWORD': os.environ.get('MYSQL_PASSWORD'),
         'HOST': os.environ.get('MYSQL_HOST'),
         'PORT': os.environ.get('MYSQL_PORT'),
+        'CONN_HEALTH_CHECKS': True,
         'OPTIONS': {
             'sql_mode': 'traditional',
         }
@@ -141,6 +141,14 @@ TIME_ZONE = 'America/Mexico_City'
 USE_I18N = True
 
 USE_TZ = True
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+if not DEBUG: 
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
 
 # Static files (CSS, JavaScript, Images)
