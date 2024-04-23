@@ -14,9 +14,9 @@ urlpatterns = [
     path('rentas', views.rents, name="rents"),
     path('historial', views.history, name="history"),
 
-    path(r'herramientas/<id_tool>', actions.tool_view, name="tool"),
-    path(r'equipos/<id_item>', actions.item_view, name="item"),
-    path(r'movimiento/<int:option>/<int:id_mov>', actions.movement_view, name="movement"),
+    path(r'herramientas/<id_tool>', views.tool_view, name="tool"),
+    path(r'equipos/<id_item>', views.item_view, name="item"),
+    path(r'movimiento/<int:option>/<int:id_mov>', views.movement_view, name="movement"),
 
     path('agregar-proveedor/<path_>', actions.add_supplier, name="add_supplier"),
     path('agregar_herramienta', actions.create_tool, name="add_tool"),
