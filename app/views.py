@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
 from django.http import HttpRequest
+from django.views.decorators.http import require_GET, require_http_methods
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.cache import cache_control
 from django.contrib import messages
 from . import models
 # Create your views here.
-@cache_control(no_cache=True, must_revalidate=True)
+@require_http_methods(['GET', 'POST'])
 def login_view(request: HttpRequest):
     if request.user.is_authenticated:
         return redirect("app:tools")
@@ -22,7 +22,7 @@ def login_view(request: HttpRequest):
             messages.warning(request, "El usuario o contraseña es incorrecto")
     return render(request, "accounts/login.html")
 
-@cache_control(no_cache=True, must_revalidate=True)
+@require_http_methods(['GET', 'POST'])
 def signup_view(request: HttpRequest):
     if request.user.is_authenticated:
         return redirect("app:tools")
@@ -45,10 +45,9 @@ def signup_view(request: HttpRequest):
     #         messages.warning(request, "El usuario ya existe", "", fail_silently=True)
     return render(request, "accounts/signup.html", {})
 
-@cache_control(no_cache=True, must_revalidate=True)
+@require_GET
 @login_required(login_url="app:signin")
 def index(request: HttpRequest):
-    print(request.user)
     tools = models.Producto.objects.filter(categoria="HERRAMIENTA", disponible=True)
     suppliers = models.Proveedor.objects.all()
     products_available = models.Producto.products.filter_products_available(models.Venta, models.Renta)
@@ -68,7 +67,7 @@ def index(request: HttpRequest):
     context["products_filtered_rented"] = tools_filtered_rented
     return render(request, "index.html", context)
 
-@cache_control(no_cache=True, must_revalidate=True)
+@require_GET
 @login_required(login_url="app:signin")
 def items(request: HttpRequest):
     context: dict = {}
@@ -84,7 +83,39 @@ def items(request: HttpRequest):
     context["items_filtered_rented"] = items_filtered_rented
     return render(request, "items.html", context)
 
-@cache_control(no_cache=True, must_revalidate=True)
+@login_required(login_url="app:signin")
+def tool_view(request: HttpRequest, id_tool: int):
+    context = {}
+    tool = models.Producto.products.get_tool_info(id_tool)
+    suppliers = models.Proveedor.objects.all()
+    context["tool"] = tool[0]
+    context["suppliers"] = suppliers
+    return render(request, "tool.html", context)
+
+@login_required(login_url="app:signin")
+def item_view(request: HttpRequest, id_item: int):
+    context = {}
+    item = models.Producto.products.get_item_info(id_item)
+    suppliers = models.Proveedor.objects.all()
+    context["suppliers"] = suppliers
+    context["item"] = item[0]
+    return render(request, "item.html", context)
+
+def movement_view(request: HttpRequest, option: int, id_mov: int):
+    context: dict = {}
+    if option == 1:
+        product_info = models.Venta.sales.get_sale_info(id_mov)
+        is_sale = True
+    else:
+        product_info = models.Renta.rents.get_rent_info(id_mov)
+        is_sale = False
+    products = models.Producto.objects.all().values("pk", "descripcion")
+    context["products"] = products
+    context["item"] = product_info[0]
+    context["option"] = True if is_sale else False
+    return render(request, "sale_rent.html", context)
+
+@require_GET
 @login_required(login_url="app:signin")
 def sales(request: HttpRequest):
     context: dict = {}
@@ -92,7 +123,7 @@ def sales(request: HttpRequest):
     context["sales"] = sales_
     return render(request, "sales.html", context)
 
-@cache_control(no_cache=True, must_revalidate=True)
+@require_GET
 @login_required(login_url="app:signin")
 def rents(request: HttpRequest):
     context: dict = {}
@@ -100,7 +131,7 @@ def rents(request: HttpRequest):
     context["rents"] = rents_
     return render(request, "rents.html", context)
     
-@cache_control(no_cache=True, must_revalidate=True)
+@require_GET
 @login_required(login_url="app:signin")
 def history(request: HttpRequest):
     context: dict = {}
