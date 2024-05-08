@@ -23,3 +23,5 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns.append(path('admin/', admin.site.urls))
 
+handler404='app.views.custom_error_404'
+handler500='app.views.custom_error_500'
