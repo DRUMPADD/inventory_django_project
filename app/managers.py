@@ -63,7 +63,7 @@ class ProductModelManager(models.Manager):
             check_provider = model_supplier.objects.get(folio=data.get("proveedor"))
         except (model_supplier.DoesNotExist, model_supplier.MultipleObjectsReturned):
             check_provider = ""
-        id = self.get_queryset().create(descripcion=data.get("articulo"), area=data.get("area"), marca=data.get("marca"), modelo=data.get("modelo"), proyecto=data.get("proyecto"), resguardo=data.get("resguardo"), orden_compra=data.get("oc"), status=data.get("status"), tipo_orden_compra=data.get("sl_opcion_oc"), proveedor=check_provider if check_provider != "" else None, no_serie_interno=data.get("noseriei"), cantidad=float(data.get("cantidad")) if data.get("cantidad") != "" else 1, categoria="EQUIPO", codigo=data.get("codigo"))
+        id = self.get_queryset().create(descripcion=data.get("articulo"), area=data.get("area"), marca=data.get("marca"), modelo=data.get("modelo"), proyecto=data.get("proyecto"), resguardo=data.get("resguardo"), orden_compra=data.get("oc"), status=data.get("status"), no_serie=data.get("noserie"), tipo_orden_compra=data.get("sl_opcion_oc"), proveedor=check_provider if check_provider != "" else None, no_serie_interno=data.get("noseriei"), cantidad=float(data.get("cantidad")) if data.get("cantidad") != "" else 1, categoria="EQUIPO", codigo=data.get("codigo"))
         return id.pk
 
     def update_tool(self, model_supplier: models.Model, id_tool: int, data: object) -> str:
@@ -82,7 +82,7 @@ class ProductModelManager(models.Manager):
         return self.get_queryset().get(pk=id_product).disponible
     
     def get_item_info(self, id_item: int) -> models.QuerySet:
-        return self.get_queryset().filter(pk=id_item).values("pk", "descripcion", "area", "marca", "modelo", "proyecto", "resguardo", "proveedor__folio", "proveedor__nombre", "orden_compra", "no_serie", "tipo_orden_compra", "no_serie_interno", "categoria", "status", "codigo")
+        return self.get_queryset().filter(pk=id_item).values("pk", "descripcion", "area", "marca", "modelo", "proyecto", "resguardo", "proveedor__folio", "proveedor__nombre", "orden_compra", "no_serie", "tipo_orden_compra", "no_serie_interno", "categoria", "status", "codigo", "cantidad")
 
     def get_tool_info(self, id_tool: int) -> models.QuerySet:
         return self.get_queryset().filter(pk=id_tool).values("pk", "descripcion", "tamanio", "libraje", "conexion", "conexion_medida", "proveedor__folio", "proveedor__nombre", "orden_compra", "codigo", "tipo_orden_compra", "no_serie", "no_serie_interno", "categoria", "pozo", "observaciones", "status",)
