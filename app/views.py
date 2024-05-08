@@ -4,6 +4,7 @@ from django.views.decorators.http import require_GET, require_http_methods
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core import exceptions
 from . import models
 # Create your views here.
 @require_http_methods(['GET', 'POST'])
@@ -142,3 +143,9 @@ def history(request: HttpRequest):
 def logout_(request: HttpRequest):
     logout(request)
     return redirect("app:signin")
+
+def custom_error_404(request: HttpRequest, exception: exceptions):
+    return render(request, "errors/error404.html")
+
+def custom_error_500(request: HttpRequest):
+    return render(request, "errors/error500.html")
