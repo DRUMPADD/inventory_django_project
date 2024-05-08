@@ -1,0 +1,11 @@
+{% extends "includes/base.html" %}
+{% load static %}
+
+
+{% block title %}Error en el sistema{% endblock %}
+{% block navbar %}
+{% endblock %}
+{% block content %}
+<h1>Oh, no! Algo salió mal</h1>
+<p><a href="{% url 'app:tools' %}">Regresar a la página principal</a></p>
+{% endblock %}
