@@ -32,7 +32,7 @@ def create_tool(request: HttpRequest):
         if r_json.get("sl_opcion") == "2":
             new_rent = models.Renta.rents.register_rent(models.Producto, new_product, r_json)
             models.Historial.objects.create(usuario=user, descripcion="Registró nuevo producto en renta", renta=models.Renta.objects.get(pk=new_rent))
-        if r_json.get("sl_opcion") == "3":
+        if r_json.get("sl_opcion") == "3" or r_json.get("sl_opcion") == "4":
             models.Historial.objects.create(usuario=user, descripcion=f"Registró nuevo producto: {r_json.get('herramienta')}")
         return JsonResponse({"message": "Herramienta especial agregada"}, status=201)
     except (json.JSONDecodeError, models.Producto.DoesNotExist, models.Proveedor.DoesNotExist, ValueError, ValidationError, FieldError, ObjectDoesNotExist) as e:
