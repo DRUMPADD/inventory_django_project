@@ -47,9 +47,9 @@ INSTALLED_APPS = [
 
 AUTH_USER_MODEL = 'app.MyCustomUser'
 LOGIN_URL = 'signin'
-LOGIN_REDIRECT_URL = 'tools'
-LOGOUT_REDIRECT_URL = "signin"
-LOGOUT_URL = 'signout'
+LOGIN_REDIRECT_URL = 'app:tools'
+LOGOUT_REDIRECT_URL = "app:signin"
+LOGOUT_URL = 'app:signout'
 
 SITE_ID = 1
 
