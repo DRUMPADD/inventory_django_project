@@ -55,7 +55,7 @@ class ProductModelManager(models.Manager):
         except (model_supplier.DoesNotExist, model_supplier.MultipleObjectsReturned):
             check_provider = ""
         print(data)
-        id = self.get_queryset().create(descripcion=data.get("herramienta"), tamanio=float(data.get("tamanio")), cantidad=float(data.get("cantidad")) if data.get("cantidad") != "" else 1, libraje=float(data.get("libraje")), conexion=data.get("conexion"), conexion_medida=data.get("medida"), no_serie=data.get("noserie"), orden_compra=data.get("oc"), status=data.get("status"), tipo_orden_compra=data.get("sl_opcion_oc"), proveedor=check_provider if check_provider != "" else None, no_serie_interno=data.get("noseriei"), categoria="HERRAMIENTA", pozo=data.get("pozo"), observaciones=data.get("observaciones"), codigo=data.get("codigo"))
+        id = self.get_queryset().create(descripcion=data.get("herramienta"), tamanio=data.get("tamanio"), cantidad=float(data.get("cantidad")) if data.get("cantidad") != "" else 1, libraje=float(data.get("libraje")), conexion=data.get("conexion"), conexion_medida=data.get("medida"), no_serie=data.get("noserie"), orden_compra=data.get("oc"), status=data.get("status"), tipo_orden_compra=data.get("sl_opcion_oc"), proveedor=check_provider if check_provider != "" else None, no_serie_interno=data.get("noseriei"), categoria="HERRAMIENTA", pozo=data.get("pozo"), observaciones=data.get("observaciones"), codigo=data.get("codigo"))
         return id.pk
     
     def create_item(self, model_supplier: models.Model, data: object) -> int:

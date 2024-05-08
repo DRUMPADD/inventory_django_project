@@ -47,7 +47,7 @@ class Producto(models.Model):
     descripcion = models.CharField(max_length=255)
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, blank=True, null=True)
     cantidad = models.FloatField(default=1)
-    tamanio = models.FloatField(default=0, blank=True)
+    tamanio = models.CharField(max_length=20, default=0, blank=True)
     libraje = models.FloatField(default=0, blank=True)
     conexion = models.CharField(max_length=10, blank=True)
     unidad_medida = models.CharField(max_length=100, default="", null=True)
