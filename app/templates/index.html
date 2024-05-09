@@ -16,6 +16,11 @@
                 <button type="button" {% if not user.is_staff %}
                 disabled {% endif %} class="open-form-container">Agregar proveedor</button>
             </div>
+        </div>
+        <div class="btns flex-between" style="gap: 20px">
+            <div style="width: 100%; display: flex; gap: 5px; align-items: center">
+                <input type="search" name="searchProduct" id="searchProduct" style="width: 70%; height: 100%; border-radius: 5px; border: 1px solid #ccc; padding: 5px; font-size: 1rem" placeholder="Buscar producto">
+            </div>
             <select name="sl_filter_option" class="form-select" id="sl_filter_option">
                 <option selected value="">Todos</option>
                 {% for code in codes %}

@@ -14,3 +14,22 @@ selectFilterOption.addEventListener('change', function () {
         }
     })
 })
+
+const searchInput = document.querySelector("[name='searchProduct']")
+const tableInfo = document.querySelectorAll("#data-list tr")
+
+searchInput?.addEventListener('keyup', (e) => {
+    const value = String(e.target.value);
+
+    if(value.trim() != "") {
+        console.log(value)
+        tableInfo.forEach(text => {
+            if(text.innerHTML.toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) != -1) {
+                text.style.display = "table-row";
+            } else {
+                text.style.display = "none";
+            }
+        })
+    }
+
+})
