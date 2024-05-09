@@ -2,7 +2,7 @@ const selectFilterOption = document.querySelector("[name='sl_filter_option']");
 const tableBody = document.querySelector("table tbody");
 const tableRows = tableBody.querySelectorAll("tr");
 
-selectFilterOption.addEventListener('change', function () {
+selectFilterOption?.addEventListener('change', function () {
     const value = this.value;
     
     tableRows.forEach((txt) => {
@@ -15,21 +15,39 @@ selectFilterOption.addEventListener('change', function () {
     })
 })
 
-const searchInput = document.querySelector("[name='searchProduct']")
-const tableInfo = document.querySelectorAll("#data-list tr")
+const inputSearch = document.querySelector('[name="searchData"]');
+const iconSearch = document.querySelector('[name="search-outline"]');
+const tableInfo = document.querySelectorAll('table tbody tr');
 
-searchInput?.addEventListener('keyup', (e) => {
-    const value = String(e.target.value);
-
-    if(value.trim() != "") {
-        console.log(value)
-        tableInfo.forEach(text => {
-            if(text.innerHTML.toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) != -1) {
-                text.style.display = "table-row";
+function showTableInfo(value) {
+    if(value) {
+        tableInfo.forEach(element => {
+            if(element.textContent.toLowerCase().indexOf(value.toLowerCase()) > -1) {
+                element.style.display = 'table-row';
             } else {
-                text.style.display = "none";
+                element.style.display = 'none';
             }
         })
+    } else {
+        tableInfo.forEach(element => {
+            element.style.display = 'table-row';
+        })
     }
+}
 
+function toggleIcon(icon, option) {
+    if(option == 'add') {
+        icon.classList.add("show")
+    } else {
+        icon.classList.remove("show")
+    }
+}
+
+inputSearch.addEventListener('keyup', function(e) {
+    const value = String(e.target.value);
+    if(value.trim() != "") {
+        showTableInfo(value)
+    } else {
+        showTableInfo('')
+    }
 })
