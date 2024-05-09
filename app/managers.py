@@ -63,7 +63,7 @@ class ProductModelManager(models.Manager):
             check_provider = model_supplier.objects.get(folio=data.get("proveedor"))
         except (model_supplier.DoesNotExist, model_supplier.MultipleObjectsReturned):
             check_provider = ""
-        id = self.get_queryset().create(descripcion=data.get("articulo"), area=data.get("area"), marca=data.get("marca"), modelo=data.get("modelo"), proyecto=data.get("proyecto"), resguardo=data.get("resguardo"), orden_compra=data.get("oc"), status=data.get("status"), no_serie=data.get("noserie"), tipo_orden_compra=data.get("sl_opcion_oc"), proveedor=check_provider if check_provider != "" else None, no_serie_interno=data.get("noseriei"), cantidad=float(data.get("cantidad")) if data.get("cantidad") != "" else 1, categoria="EQUIPO", codigo=data.get("codigo"))
+        id = self.get_queryset().create(descripcion=data.get("articulo"), area=data.get("area"), marca=data.get("marca"), modelo=data.get("modelo"), proyecto=data.get("proyecto"), resguardo=data.get("resguardo"), orden_compra=data.get("oc"), status=data.get("status"), no_serie=data.get("noserie"), tipo_orden_compra=data.get("sl_opcion_oc"), proveedor=check_provider if check_provider != "" else None, no_serie_interno=data.get("noseriei"), cantidad=float(data.get("cantidad")) if data.get("cantidad") != "" else 1, categoria="EQUIPO", tamanio=data.get("tamanio"))
         return id.pk
 
     def update_tool(self, model_supplier: models.Model, id_tool: int, data: object) -> str:
