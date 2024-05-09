@@ -51,8 +51,8 @@ def create_item(request: HttpRequest):
             models.Historial.objects.create(usuario=models.MyCustomUser.objects.get(username=str(request.user)), descripcion="Registró nuevo producto en renta", renta=models.Renta.objects.get(pk=new_rent))
         return JsonResponse({"message": "Equipo agregado correctamente"}, status=201)
     except (json.JSONDecodeError, models.Producto.DoesNotExist, models.Proveedor.DoesNotExist, ValidationError, FieldError, ObjectDoesNotExist, ValueError) as e:
-                print(e)
-                return JsonResponse({"message": "No se pudo agregar el equipo correctamente"}, status=500)
+        print(e)
+        return JsonResponse({"message": "No se pudo agregar el equipo correctamente"}, status=500)
 
 @require_http_methods(['PUT'])
 @login_required(login_url="app:signin")
