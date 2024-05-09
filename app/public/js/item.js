@@ -12,7 +12,7 @@ formItem?.addEventListener("submit", async(e) => {
             },
             body: JSON.stringify({
                 articulo: formItem["articulo"].value,
-                codigo: formItem["codigo"].value,
+                codigo: formItem["tamanio"].value,
                 area: formItem["area"].value,
                 cantidad: formItem["cantidad"].value,
                 marca: formItem["marca"].value,

@@ -24,8 +24,8 @@
                 <input type="text" id="articulo" name="articulo" {% if item %} value="{{ item.descripcion }}" {% endif %} value="{{ item.descripcion }}" required>
             </section>
             <section>
-                <label for="codigo">Código<span class="required">*</span></label>
-                <input type="text" id="codigo" name="codigo" {% if item %} value="{{ item.codigo|default:'' }}" {% endif %} class="input-required" required>
+                <label for="tamanio">Tamaño<span class="required">*</span></label>
+                <input type="text" id="tamanio" name="tamanio" {% if item %} value="{{ item.tamanio|default:'' }}" {% endif %} class="input-required" required>
             </section>
         </div>
         <div class="box-content">
