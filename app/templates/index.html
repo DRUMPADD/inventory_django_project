@@ -3,6 +3,7 @@
 {% block title %}Herramientas especiales{% endblock %}
 {% block styles %}
 <link rel="stylesheet" href="{% static 'css/tables.css' %}">
+<link rel="stylesheet" href="{% static 'css/search.css' %}">
 {% endblock %}
 {% block content %}
 <span hidden class="url-add-tool">{% url 'app:add_tool' %}</span>
@@ -18,8 +19,16 @@
             </div>
         </div>
         <div class="btns flex-between" style="gap: 20px">
-            <div style="width: 100%; display: flex; gap: 5px; align-items: center">
-                <input type="search" name="searchProduct" id="searchProduct" style="width: 70%; height: 100%; border-radius: 5px; border: 1px solid #ccc; padding: 5px; font-size: 1rem" placeholder="Buscar producto">
+            <div class="input-search">
+                <div style="width: 100%; justify-content:flex-start">
+                    <input type="text" name="searchData" placeholder="Buscar...">
+                    <div class="icons">
+                        <ion-icon name="search-outline" class="show"></ion-icon>
+                        {% comment %}
+                        <ion-icon name="close-outline"></ion-icon>
+                        {% endcomment %}
+                    </div>
+                </div>
             </div>
             <select name="sl_filter_option" class="form-select" id="sl_filter_option">
                 <option selected value="">Todos</option>

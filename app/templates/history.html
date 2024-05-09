@@ -3,6 +3,7 @@
 {% block title %}Historial{% endblock %}
 {% block styles %}
 <link rel="stylesheet" href="{% static 'css/history.css' %}">
+<link rel="stylesheet" href="{% static 'css/search.css' %}">
 {% endblock %}
 {% block content %}
 <div class="container">
@@ -13,7 +14,6 @@
                 <input type="text" name="searchData" placeholder="Buscar...">
                 <div class="icons">
                     <ion-icon name="search-outline" class="show"></ion-icon>
-                    <ion-icon name="close-outline"></ion-icon>
                 </div>
             </div>
         </div>
@@ -63,44 +63,5 @@
 </div>
 {% endblock %}
 {% block scripts %}
-    <script>
-        const inputSearch = document.querySelector('[name="searchData"]');
-        const iconSearch = document.querySelector('[name="search-outline"]');
-        const iconClose = document.querySelector('[name="close-outline"]');
-        const tableInfo = document.querySelectorAll('table tbody tr');
-
-        function showTableInfo(value) {
-            if(value) {
-                tableInfo.forEach(element => {
-                    if(element.textContent.toLowerCase().indexOf(value.toLowerCase()) > -1) {
-                        element.style.display = 'table-row';
-                    } else {
-                        element.style.display = 'none';
-                    }
-                })
-            } else {
-                tableInfo.forEach(element => {
-                    element.style.display = 'table-row';
-                })
-            }
-        }
-
-        inputSearch.addEventListener('keyup', function(e) {
-            const value = String(e.target.value);
-            if(value.trim() != "") {
-                iconSearch.classList.remove('show');
-                iconClose.classList.add('show');
-                showTableInfo(value)
-            } else {
-                showTableInfo('')
-                iconSearch.classList.add('show');
-                iconClose.classList.remove('show');
-            }
-        })
-
-        iconClose.addEventListener('click', () => {
-            inputSearch.value = '';
-            showTableInfo('')
-        })
-    </script>
+    <script src="{% static 'js/filters.js' %}"></script>
 {% endblock %}
