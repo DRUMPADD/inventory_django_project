@@ -2,8 +2,6 @@ const urlUpdateTool = document.querySelector(".url-update-tool")?.textContent;
 
 form?.addEventListener("submit", async(e) => {
     e.preventDefault();
-    formContainer[0]?.classList.toggle("opened");
-    
     try {
         const response = await fetch(urlUpdateTool, {
             method: 'PUT',
@@ -39,7 +37,10 @@ form?.addEventListener("submit", async(e) => {
             text: data.message,
             position: response.status == 201 ? 'center' : 'top-end'
         })
-        window.location.reload();
+        if(response.status == 201) {
+            formContainer[0]?.classList.toggle("opened");
+            window.location.reload();
+        }
     } catch (error) {
         Swal.fire({
             icon: 'error',

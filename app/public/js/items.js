@@ -2,7 +2,6 @@ const urlAddItem = document.querySelector(".url-add-item")?.textContent;
 
 formItem?.addEventListener("submit", async(e) => {
     e.preventDefault();
-    formContainer[0]?.classList.toggle("opened");
     try {
         const response = await fetch(urlAddItem, {
             method: 'POST',
@@ -14,7 +13,7 @@ formItem?.addEventListener("submit", async(e) => {
             body: JSON.stringify({
                 sl_opcion: formItem["sl_opcion"].value,
                 articulo: formItem["articulo"].value,
-                codigo: formItem["tamanio"].value,
+                tamanio: formItem["tamanio"].value,
                 cantidad: formItem["cantidad"].value,
                 area: formItem["area"].value,
                 marca: formItem["marca"].value,
@@ -39,7 +38,10 @@ formItem?.addEventListener("submit", async(e) => {
             text: data.message,
             position: response.status == 201 ? 'center' : 'top-end'
         })
-        window.location.reload();
+        if(response.status == 201) {
+            formContainer[0]?.classList.toggle("opened");
+            window.location.reload();
+        }
     } catch (error) {
         Swal.fire({
             icon: 'error',

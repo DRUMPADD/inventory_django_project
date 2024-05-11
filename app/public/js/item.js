@@ -1,7 +1,6 @@
 const urlUpdateItem = document.querySelector(".url-update-item")?.textContent;
 formItem?.addEventListener("submit", async(e) => {
     e.preventDefault();
-    formContainer[0]?.classList.toggle("opened")
     try {
         const res = await fetch(urlUpdateItem, {
             method: 'PUT',
@@ -12,7 +11,7 @@ formItem?.addEventListener("submit", async(e) => {
             },
             body: JSON.stringify({
                 articulo: formItem["articulo"].value,
-                codigo: formItem["tamanio"].value,
+                tamanio: formItem["tamanio"].value,
                 area: formItem["area"].value,
                 cantidad: formItem["cantidad"].value,
                 marca: formItem["marca"].value,
@@ -38,7 +37,10 @@ formItem?.addEventListener("submit", async(e) => {
             text: data.message,
             position: res.status == 201 ? 'center' : 'top-end'
         })
-        window.location.reload()
+        if(response.status == 201) {
+            formContainer[0]?.classList.toggle("opened");
+            window.location.reload();
+        }
     } catch(e) {
         Swal.fire({
             icon: 'error',
