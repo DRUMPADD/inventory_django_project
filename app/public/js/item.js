@@ -10,20 +10,24 @@ formItem?.addEventListener("submit", async(e) => {
                 'mode': 'same-origin',
             },
             body: JSON.stringify({
+                sl_opcion: formItem["sl_opcion"].value,
                 articulo: formItem["articulo"].value,
                 tamanio: formItem["tamanio"].value,
-                area: formItem["area"].value,
                 cantidad: formItem["cantidad"].value,
+                area: formItem["area"].value,
                 marca: formItem["marca"].value,
                 modelo: formItem["modelo"].value,
                 proyecto: formItem["proyecto"].value,
+                resguardo: formItem["resguardo"].value,
+                noserie: formItem["noserie"].value,
+                noseriei: formItem["noseriei"].value,
+                cantidad: formItem["cantidad"].value,
                 proveedor: formItem["proveedor"].value,
                 oc: formItem["oc"].value,
-                noseriei: formItem["noseriei"].value,
-                noserie: formItem["noserie"].value,
-                resguardo: formItem["resguardo"].value,
                 sl_opcion_oc: formItem["sl_opcion_oc"].value,
                 status: formItem["status"].value,
+                fsalida: formItem["fsalida"]?.value ?? "",
+                fregreso: formItem["fregreso"]?.value ?? "",
             })
         })
 

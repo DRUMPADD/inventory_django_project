@@ -20,6 +20,7 @@ formItem?.addEventListener("submit", async(e) => {
                 modelo: formItem["modelo"].value,
                 proyecto: formItem["proyecto"].value,
                 resguardo: formItem["resguardo"].value,
+                noserie: formItem["noserie"].value,
                 noseriei: formItem["noseriei"].value,
                 cantidad: formItem["cantidad"].value,
                 proveedor: formItem["proveedor"].value,
