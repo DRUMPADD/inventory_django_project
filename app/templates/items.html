@@ -1,6 +1,6 @@
 {% extends "includes/base.html" %}
 {% load static %}
-{% block title %}Herramienta{% endblock %}
+{% block title %}Almacen{% endblock %}
 {% block styles %}
     <link rel="stylesheet" href="{% static 'css/tables.css' %}">
     <link rel="stylesheet" href="{% static 'css/search.css' %}">
@@ -13,10 +13,8 @@
         {% if user.is_staff %}
             <div class="btns flex-between">
                 <div>
-                    <button type="button" {% if not user.is_staff %}
-                    disabled {% endif %} class="open-form-container">Agregar equipo</button>
-                    <button type="button" {% if not user.is_staff %}
-                    disabled {% endif %}  class="open-form-container">Agregar proveedor</button>
+                    <button type="button" class="open-form-container">Agregar equipo</button>
+                    <button type="button" class="open-form-container">Agregar proveedor</button>
                 </div>
             </div>
         {% endif %}
@@ -57,9 +55,9 @@
                             <td>{{ item.modelo }}</td>
                             <td><p class="status status-{% if item.status == 'Listo' %}success{% elif item.status == 'Mantenimiento' %}warning{% else %}error{% endif %}">{{ item.status }}</p></td>
                             <td class="btns">
-                                <button><a href="{% url 'app:item' id_item=item.pk %}"><i class="fa-solid fa-eye"></i></a></button>
                                 {% if user.is_staff %}
-                                <button><a href="{% url 'app:delete_product' id_product=item.pk %}"><i class="fa-solid fa-trash"></i></a></button>
+                                    <button><a href="{% url 'app:item' id_item=item.pk %}"><i class="fa-solid fa-eye"></i></a></button>
+                                    <button><a href="{% url 'app:delete_product' id_product=item.pk %}"><i class="fa-solid fa-trash"></i></a></button>
                                 {% endif %}
                             </td>
                         </tr>
