@@ -102,7 +102,7 @@ def update_rent(request: HttpRequest, id_rent: int):
         print(e)
         return JsonResponse({"message": f"No se pudo modificar la venta {id_rent}"}, status=500)
 
-@require_http_methods(['PUT'])
+@require_http_methods(['GET', 'DELETE'])
 @login_required(login_url="app:signin")
 def delete_product(request: HttpRequest, id_product: int):
     try:
