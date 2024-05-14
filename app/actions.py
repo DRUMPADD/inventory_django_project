@@ -106,9 +106,12 @@ def update_rent(request: HttpRequest, id_rent: int):
 @login_required(login_url="app:signin")
 def delete_product(request: HttpRequest, id_product: int):
     try:
+        category = models.Producto.objects.get(pk=id_product)
         state_product = models.Producto.products.delete_product(id_product)
         if not state_product:
             models.Historial.objects.create(usuario=models.MyCustomUser.objects.get(username=str(request.user)), descripcion=f"Eliminó producto {id_product}")
+        if category.categoria == 'EQUIPO':
+            return redirect("app:items")
         return redirect("app:tools")
     except (models.Producto.DoesNotExist, json.JSONDecodeError) as e:
         print(e)
