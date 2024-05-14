@@ -142,11 +142,9 @@ USE_I18N = True
 
 USE_TZ = True
 
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-
 if not DEBUG: 
+    SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+    SESSION_EXPIRE_AT_BROWSER_CLOSE = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
 
