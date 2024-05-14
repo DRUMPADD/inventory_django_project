@@ -13,10 +13,8 @@
         {% if user.is_staff %}
             <div class="btns flex-between">
                 <div>
-                    <button type="button"{% if not user.is_staff %}
-                    disabled {% endif %} class="open-form-container">Agregar herramienta</button>
-                    <button type="button" {% if not user.is_staff %}
-                    disabled {% endif %} class="open-form-container">Agregar proveedor</button>
+                    <button type="button" class="open-form-container">Agregar herramienta</button>
+                    <button type="button" class="open-form-container">Agregar proveedor</button>
                 </div>
             </div>
         {% endif %}
@@ -58,9 +56,9 @@
                             <td>{{ tool.tamanio }}</td>
                             <td><p class="status status-{% if tool.status == 'Listo' %}success{% elif tool.status == 'Mantenimiento' %}warning{% else %}error{% endif %}">{{ tool.status }}</p></td>
                             <td class="btns">
-                                <button><a href="{% url 'app:tool' id_tool=tool.pk %}"><i class="fa-solid fa-eye"></i></a></button>
                                 {% if user.is_staff %}
-                                <button><a href="{% url 'app:delete_product' id_product=tool.pk %}"><i class="fa-solid fa-trash"></i></a></button>
+                                    <button><a href="{% url 'app:tool' id_tool=tool.pk %}"><i class="fa-solid fa-eye"></i></a></button>
+                                    <button><a href="{% url 'app:delete_product' id_product=tool.pk %}"><i class="fa-solid fa-trash"></i></a></button>
                                 {% endif %}
                             </td>
                         </tr>
