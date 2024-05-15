@@ -1,6 +1,6 @@
 from django.db import models
 from datetime import date
-from django.db.models import Exists, OuterRef
+from django.db.models import Exists, OuterRef, Sum
 from django.contrib.auth.models import BaseUserManager
 
 class CustomUserManager(BaseUserManager):
@@ -89,6 +89,9 @@ class ProductModelManager(models.Manager):
     
     def filter_products_by_name_size(self, model_rents: models.Model, model_sales: models.Model, category: str):
         return self.get_queryset().values("descripcion", "tamanio").annotate(models.Count("descripcion"), models.Count("tamanio"), no_products_sold=~Exists(model_sales.objects.filter(producto=OuterRef("pk"))), no_products_rented=~Exists(model_rents.objects.filter(producto=OuterRef("pk")))).filter(no_products_rented=True, no_products_sold=True, categoria=category)
+    
+    def group_products_by_name_size(self, model_rents: models.Model, model_sales: models.Model, category: str):
+        return self.get_queryset().values("descripcion", "tamanio").order_by("descripcion", "tamanio").annotate(total=models.Sum("cantidad"), no_products_sold=~Exists(model_sales.objects.filter(producto=OuterRef("pk"))), no_products_rented=~Exists(model_rents.objects.filter(producto=OuterRef("pk")))).filter(no_products_rented=True, no_products_sold=True, categoria=category, disponible=True)
 
 
 class SaleModelManager(models.Manager):
