@@ -116,3 +116,60 @@ def delete_product(request: HttpRequest, id_product: int):
     except (models.Producto.DoesNotExist, json.JSONDecodeError) as e:
         print(e)
         return redirect("app:tools")
+
+@require_http_methods(['POST'])
+@login_required(login_url="app:signin")
+def create_use_of_product(request: HttpRequest, id: int):
+    try:
+        info_product = models.Producto.objects.get(pk=id)
+        info = json.loads(request.body.decode("utf-8"))
+        product = models.Producto_uso()
+        product.producto = info_product
+        product.cantidad_uso = float(info.get("cantidad_uso"))
+        product.estado = info.get("sl_status")
+        product.condicion = info.get("condicion")
+        if info_product.cantidad < float(info.get("cantidad_uso")):
+            return JsonResponse(data={"message": "No hay suficiente equipo disponible", "status": 204}, status=204)
+        info_product.cantidad = info_product.cantidad - float(info.get("cantidad_uso"))
+        info_product.save()
+        product.save()
+        models.Historial.objects.create(usuario=models.MyCustomUser.objects.get(username=str(request.user)), descripcion=f"Salida de producto en uso {info_product.descripcion}, cantidad actual: {info_product.cantidad}")
+        return JsonResponse({"message": "Equipo registrado en uso", "status": 201}, status=201)
+    except (json.JSONDecodeError):
+        return JsonResponse({"message": "Error en el sistema", "status": 500}, status=500)
+
+@require_http_methods(["PUT"])
+@login_required(login_url="app:signin")
+def update_use_of_product(request: HttpRequest, id_product: int, id_product_use: int):
+    try:
+        product = models.Producto.objects.get(pk=id_product)
+        product_use = models.Producto_uso.objects.get(pk=id_product_use)
+        info = json.loads(request.body.decode("utf-8"))
+        product_use.estado = info.get("sl_status")
+        product_use.condicion = info.get("condicion")
+        # if float(info.get("cantidad_uso")) != product_use.cantidad_uso or info.get("sl_status") != 'Listo':
+        if float(info.get("cantidad_uso")) > product_use.cantidad_uso:
+            if float(info.get("cantidad_uso")) - product_use.cantidad_uso < product.cantidad:
+                product.cantidad = (product.cantidad + product_use.cantidad_uso) - float(info.get("cantidad_uso"))
+                product_use.cantidad_uso = float(info.get("cantidad_uso"))
+            else:
+                product_use.save()
+                return JsonResponse({"message": "No hay suficiente equipo disponible", "status": 204}, status=204)
+        if float(info.get("cantidad_uso")) < product_use.cantidad_uso:
+            product.cantidad = (product_use.cantidad_uso - float(info.get("cantidad_uso"))) + product.cantidad
+            product_use.cantidad_uso = float(info.get("cantidad_uso"))
+        if float(info.get("cantidad_uso")) == product_use.cantidad_uso and info.get("sl_status") == 'Listo':
+            product.cantidad = product.cantidad + float(info.get("cantidad_uso"))
+        if info.get("sl_status") == 'Listo':
+            models.Historial.objects.create(usuario=models.MyCustomUser.objects.get(username=str(request.user)), descripcion=f"Entrada de producto {product.descripcion} que estuvo en uso, cantidad actual: {product.cantidad}")
+            product_use.save()
+            product.save()
+            print(product.cantidad)
+        else:
+            models.Historial.objects.create(usuario=models.MyCustomUser.objects.get(username=str(request.user)), descripcion=f"Actualización de producto {product.descripcion} en uso, cantidad actual: {product.cantidad}")
+            product_use.save()
+            print(product_use)
+            product.save()
+        return JsonResponse({"message": "Actualización de equipo en uso", "status": 200}, status=200)
+    except (json.JSONDecodeError):
+        return JsonResponse({"message": "Error en el sistema", "status": 500}, status=500)
