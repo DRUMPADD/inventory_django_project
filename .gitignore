@@ -11,3 +11,5 @@ ENV/
 venv/
 
 notes.txt
+
+trash.*
