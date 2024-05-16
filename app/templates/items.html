@@ -6,7 +6,9 @@
     <link rel="stylesheet" href="{% static 'css/search.css' %}">
 {% endblock %}
 {% block content %}
-<span hidden class="url-add-item">{% url 'app:add_item' %}</span>
+{% if user.is_staff %}
+    <span hidden class="url-add-item">{% url 'app:add_item' %}</span>
+{% endif %}
 <div class="container">
     <h1 class="text-center">Almacen IMA</h1>
     <div class="table-container">
@@ -55,8 +57,8 @@
                             <td>{{ item.modelo }}</td>
                             <td><p class="status status-{% if item.status == 'Listo' %}success{% elif item.status == 'Mantenimiento' %}warning{% else %}error{% endif %}">{{ item.status }}</p></td>
                             <td class="btns">
+                                <button><a href="{% url 'app:item' id_item=item.pk %}"><i class="fa-solid fa-eye"></i></a></button>
                                 {% if user.is_staff %}
-                                    <button><a href="{% url 'app:item' id_item=item.pk %}"><i class="fa-solid fa-eye"></i></a></button>
                                     <button><a href="{% url 'app:delete_product' id_product=item.pk %}"><i class="fa-solid fa-trash"></i></a></button>
                                 {% endif %}
                             </td>

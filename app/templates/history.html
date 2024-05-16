@@ -50,7 +50,7 @@
                             <tr>
                                 <td>{{ h.pk }}</td>
                                 <td>{{ h.usuario__name_user }}</td>
-                                <td>{% if 'Registró' in h.descripcion %} {{ h.descripcion|cut:"Registró nuevo producto: "|capfirst }} {% elif 'Modificó' in h.descripcion %} {{ h.descripcion|cut:"Modificó"|capfirst }}{% elif 'Eliminó' in h.descripcion %} {{ h.descripcion|cut:"Eliminó"|capfirst }} {% endif %}</td>
+                                <td>{% if 'Registró' in h.descripcion %} {{ h.descripcion|cut:"Registró nuevo producto: "|capfirst }} {% elif 'Modificó' in h.descripcion %} {{ h.descripcion|cut:"Modificó"|capfirst }}{% elif 'Eliminó' in h.descripcion %} {{ h.descripcion|cut:"Eliminó"|capfirst }} {% else %} {{ h.descripcion|cut:'Salida de producto en uso'|cut:', cantidad actual:' }} {% endif %}</td>
                                 <td>{{ h.descripcion }}</td>
                                 <td>{{ h.fecha_hora|date:"j F o h:i A" }}</td>
                             </tr>

@@ -2,7 +2,9 @@
 {% load static %}
 {% block title %}Herramienta: {{ tool.descripcion }}{% endblock %}
 {% block content %}
-<span hidden class="url-update-tool">{% url 'app:update_tool' id_tool=tool.pk %}</span>
+{% if user.is_staff %}
+    <span hidden class="url-update-tool">{% url 'app:update_tool' id_tool=tool.pk %}</span>
+{% endif %}
     <div class="container tool" id="product-info">
         <h2>{{ tool.descripcion }}</h2>
         <div class="btns">

@@ -6,7 +6,9 @@
 <link rel="stylesheet" href="{% static 'css/search.css' %}">
 {% endblock %}
 {% block content %}
-<span hidden class="url-add-tool">{% url 'app:add_tool' %}</span>
+{% if user.is_staff %}
+    <span hidden class="url-add-tool">{% url 'app:add_tool' %}</span>
+{% endif %}
 <div class="container">
     <h1 class="text-center">Herramientas especiales</h1>
     <div class="table-container">
@@ -56,8 +58,8 @@
                             <td>{{ tool.tamanio }}</td>
                             <td><p class="status status-{% if tool.status == 'Listo' %}success{% elif tool.status == 'Mantenimiento' %}warning{% else %}error{% endif %}">{{ tool.status }}</p></td>
                             <td class="btns">
+                                <button><a href="{% url 'app:tool' id_tool=tool.pk %}"><i class="fa-solid fa-eye"></i></a></button>
                                 {% if user.is_staff %}
-                                    <button><a href="{% url 'app:tool' id_tool=tool.pk %}"><i class="fa-solid fa-eye"></i></a></button>
                                     <button><a href="{% url 'app:delete_product' id_product=tool.pk %}"><i class="fa-solid fa-trash"></i></a></button>
                                 {% endif %}
                             </td>

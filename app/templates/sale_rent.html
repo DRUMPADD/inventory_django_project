@@ -7,7 +7,9 @@
 
 {% block content %}
 <div class="container">
-    <span hidden class="url-update-movement">{% if option %}{% url 'app:update_sale' id_sale=item.pk %}{% else %}{% url 'app:update_rent' id_rent=item.pk %}{% endif %}</span>
+    {% if user.is_staff %}
+        <span hidden class="url-update-movement">{% if option %}{% url 'app:update_sale' id_sale=item.pk %}{% else %}{% url 'app:update_rent' id_rent=item.pk %}{% endif %}</span>
+    {% endif %}
     <h1 class="text-center" style="font-size: 4em;">{% if option %}Venta{% else %}Renta{% endif %} {{ item.pk }}</h1>
     <section style="border: 1px solid; border-radius: 10px; margin: 10px auto; width: 650px; max-width: 600px; height: 300px; min-height: 200px;">
         <h2 style="font-size: 40px; padding: 10px; text-align: center">Información</h2>

@@ -1,10 +1,11 @@
 {% extends "includes/base.html" %}
 {% load static %}
 {% block title %}Equipo: {{ item.descripcion }}{% endblock %}
-
-
 {% block content %}
-    <span hidden class="url-update-item">{% url 'app:update_item' id_item=item.pk %}</span>
+    {% if user.is_staff %}
+        <span hidden class="url-update-item">{% url 'app:update_item' id_item=item.pk %}</span>
+        <span hidden class="url-update-item-use">{% url 'app:add_item_in_use' id=item.pk %}</span>
+    {% endif %}
     <div class="container tool" id="product-info">
         <h2>{{ item.descripcion }}</h2>
         <div class="btns">
@@ -61,14 +62,73 @@
             </p>
         </div>
         {% if user.is_staff %}
-        <div class="btn-tools btns">
-            <button type="button" class="open-form-container">Actualizar datos</button>
+            <div class="btn-tools btns">
+                <button type="button" class="open-form-container">Actualizar datos</button>
+                <button type="button" class="open-form-container">Hacer uso de equipo</button>
+            </div>
+        {% endif %}
+        {% if items_use %}
+        <div class="table-container">
+            <h1>Historial de uso de equipo</h1>
+            <div class="table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Fecha</th>
+                            <th>Status</th>
+                            <th>Condición</th>
+                            {% if user.is_staff %}
+                                <th>Editar</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody id="data-list">
+                        {% for item in items_use %}
+                            <tr>
+                                <td>{{ item.pk }}</td>
+                                <td>{{ item.producto__descripcion }}</td>
+                                <td>{{ item.cantidad_uso }}</td>
+                                <td>{{ item.fecha_uso }}</td>
+                                <td><p class="status status-{% if item.estado == 'Listo' %}success{% elif item.estado == 'Mantenimiento' %}warning {% elif item.estado == 'En uso' %}info{% else %}error{% endif %}">{{ item.estado }}</p></td>
+                                <td>
+                                    <p>{{ item.condicion }}</p>
+                                </td>
+                                {% if user.is_staff %}
+                                    <td id="{% url 'app:alter_item_in_use' id_product=item.producto__pk id_product_use=item.pk %}">
+                                        <button type="button" {% if item.estado == 'Listo' %} disabled {% endif %} class="status status-info btnUpdate" style="width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                    </td>
+                                {% endif %}
+                                {% comment %}
+                                <tr data-code="{{ item.codigo|default:'' }}"></tr>
+                                <td class="btns">
+                                    <button><a href="{% url 'app:item' id_item=item.pk %}"><i class="fa-solid fa-eye"></i></a></button>
+                                    {% if user.is_staff %}
+                                    <button><a href="{% url 'app:delete_product' id_product=item.pk %}"><i class="fa-solid fa-trash"></i></a></button>
+                                    {% endif %}
+                                </td>
+                                {% endcomment %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
         {% endif %}
     </div>
     {% if user.is_staff %}
         <div class="form-container">
             {% include "includes/forms/form_item.html" with item=item %}
+        </div>
+        <div class="form-container">
+            {% include "includes/forms/form_use_product.html" with type_producto='EQUIPO' item=item %}
+        </div>
+        <div class="form-container">
+            {% include "includes/forms/form_use_product.html" with type_producto='EQUIPO' item_use=True %}
         </div>
     {% endif %}
 {% endblock %}
