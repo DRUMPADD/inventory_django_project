@@ -88,11 +88,7 @@ class ProductModelManager(models.Manager):
         return self.get_queryset().filter(pk=id_tool).values("pk", "descripcion", "tamanio", "libraje", "conexion", "conexion_medida", "proveedor__folio", "proveedor__nombre", "orden_compra", "codigo", "tipo_orden_compra", "no_serie", "no_serie_interno", "categoria", "pozo", "observaciones", "status",)
     
     def filter_products_by_name_size(self, model_rents: models.Model, model_sales: models.Model, category: str):
-        return self.get_queryset().values("descripcion", "tamanio").annotate(models.Count("descripcion"), models.Count("tamanio"), no_products_sold=~Exists(model_sales.objects.filter(producto=OuterRef("pk"))), no_products_rented=~Exists(model_rents.objects.filter(producto=OuterRef("pk")))).filter(no_products_rented=True, no_products_sold=True, categoria=category)
-    
-    def group_products_by_name_size(self, model_rents: models.Model, model_sales: models.Model, category: str):
         return self.get_queryset().values("descripcion", "tamanio").order_by("descripcion", "tamanio").annotate(total=models.Sum("cantidad"), no_products_sold=~Exists(model_sales.objects.filter(producto=OuterRef("pk"))), no_products_rented=~Exists(model_rents.objects.filter(producto=OuterRef("pk")))).filter(no_products_rented=True, no_products_sold=True, categoria=category, disponible=True)
-
 
 class SaleModelManager(models.Manager):
     def __str__(self) -> int:
