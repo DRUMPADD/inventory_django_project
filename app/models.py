@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.utils import timezone
 from .managers import CustomUserManager, ProductModelManager, SaleModelManager, RentModelManager
+from datetime import datetime
 # Create your models here.
 
 class MyCustomUser(AbstractBaseUser, PermissionsMixin):
@@ -84,6 +85,16 @@ class Renta(models.Model):
     fecha_regreso = models.DateField(null=True, blank=True)
     objects = models.Manager()
     rents = RentModelManager()
+
+class Producto_uso(models.Model):
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    cantidad_uso = models.FloatField(default=0, blank=True)
+    fecha_uso = models.DateTimeField(auto_now_add=datetime.now, blank=True)
+    estado = models.CharField(max_length=30, default="Listo", blank=True)
+    condicion = models.TextField(default="", blank=True)
+
+    class Meta:
+        db_table = 'Producto_uso'
 
 class Historial(models.Model):
     usuario = models.ForeignKey(MyCustomUser, on_delete=models.CASCADE)
