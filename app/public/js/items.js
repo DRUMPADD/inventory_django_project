@@ -1,34 +1,34 @@
 const urlAddItem = document.querySelector(".url-add-item")?.textContent;
 
-formItem?.addEventListener("submit", async(e) => {
+formItems[0]?.addEventListener("submit", async(e) => {
     e.preventDefault();
     try {
         const response = await fetch(urlAddItem, {
             method: 'POST',
             headers: {
-                'X-CSRFToken': formItem["csrfmiddlewaretoken"].value,
+                'X-CSRFToken': formItems[0]["csrfmiddlewaretoken"].value,
                 'Content-Type': 'application/json',
                 'mode': 'same-origin',
             },
             body: JSON.stringify({
-                sl_opcion: formItem["sl_opcion"].value,
-                articulo: formItem["articulo"].value,
-                tamanio: formItem["tamanio"].value,
-                cantidad: formItem["cantidad"].value,
-                area: formItem["area"].value,
-                marca: formItem["marca"].value,
-                modelo: formItem["modelo"].value,
-                proyecto: formItem["proyecto"].value,
-                resguardo: formItem["resguardo"].value,
-                noserie: formItem["noserie"].value,
-                noseriei: formItem["noseriei"].value,
-                cantidad: formItem["cantidad"].value,
-                proveedor: formItem["proveedor"].value,
-                oc: formItem["oc"].value,
-                sl_opcion_oc: formItem["sl_opcion_oc"].value,
-                status: formItem["status"].value,
-                fsalida: formItem["fsalida"]?.value ?? "",
-                fregreso: formItem["fregreso"]?.value ?? "",
+                sl_opcion: formItems[0]["sl_opcion"].value,
+                articulo: formItems[0]["articulo"].value,
+                tamanio: formItems[0]["tamanio"].value,
+                cantidad: formItems[0]["cantidad"].value,
+                area: formItems[0]["area"].value,
+                marca: formItems[0]["marca"].value,
+                modelo: formItems[0]["modelo"].value,
+                proyecto: formItems[0]["proyecto"].value,
+                resguardo: formItems[0]["resguardo"].value,
+                noserie: formItems[0]["noserie"].value,
+                noseriei: formItems[0]["noseriei"].value,
+                cantidad: formItems[0]["cantidad"].value,
+                proveedor: formItems[0]["proveedor"].value,
+                oc: formItems[0]["oc"].value,
+                sl_opcion_oc: formItems[0]["sl_opcion_oc"].value,
+                status: formItems[0]["status"].value,
+                fsalida: formItems[0]["fsalida"]?.value ?? "",
+                fregreso: formItems[0]["fregreso"]?.value ?? "",
             })
         });
         if(response.status != 201) throw new Error(response.statusText);
