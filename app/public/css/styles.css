@@ -528,6 +528,10 @@ table tbody td .status {
     background: #bbf7c5;
     color: #0a8a20
 }
+.status.status-info {
+    background: #bbc7f7;
+    color: #0a448a
+}
 .status.status-warning {
     color: #a68b00;
     background: #fff0c2;
