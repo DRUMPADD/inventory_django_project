@@ -97,9 +97,11 @@ def tool_view(request: HttpRequest, id_tool: int):
 def item_view(request: HttpRequest, id_item: int):
     context = {}
     item = models.Producto.products.get_item_info(id_item)
+    items_in_use = models.Producto_uso.objects.filter(producto=models.Producto.objects.get(pk=id_item)).values('pk', 'producto__descripcion', 'producto__pk', 'cantidad_uso', 'fecha_uso', 'estado', 'condicion')
     suppliers = models.Proveedor.objects.all()
     context["suppliers"] = suppliers
     context["item"] = item[0]
+    context["items_use"] = items_in_use
     return render(request, "item.html", context)
 
 def movement_view(request: HttpRequest, option: int, id_mov: int):
