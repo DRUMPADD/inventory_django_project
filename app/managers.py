@@ -95,13 +95,13 @@ class SaleModelManager(models.Manager):
         return f'{self.pk}'
     
     def get_all_products_sold(self) -> models.QuerySet:
-        return self.get_queryset().all().values("pk", "producto__pk", "producto__descripcion", "producto__no_serie", "fecha_salida")
+        return self.get_queryset().all().values("pk", "producto__producto__pk", "producto__producto__descripcion", "producto__producto__no_serie", "fecha_salida")
 
     def get_sale_info(self, sale_pk: int):
         return self.get_queryset().filter(pk=sale_pk).values("pk", "producto__pk", "producto__descripcion", "producto__categoria", "fecha_salida")
     
     def filter_products_sold(self):
-        return self.get_queryset().filter(producto__disponible=True).values("pk", "producto__pk", "producto__descripcion", "producto__tamanio")
+        return self.get_queryset().filter(producto__producto__disponible=True).values("pk", "producto__producto__pk", "producto__producto__descripcion", "producto__producto__tamanio")
 
     
     def register_sale(self, product_model: models.Model, id_product: int, object_date: dict):
@@ -116,16 +116,16 @@ class RentModelManager(models.Manager):
         return f'{self.pk} {self.producto}'
 
     def get_rent_info(self, rent_pk: int):
-        return self.get_queryset().filter(pk=rent_pk).values("pk", "producto__pk", "producto__descripcion", "producto__categoria", "fecha_salida", "fecha_regreso")
+        return self.get_queryset().filter(pk=rent_pk).values("pk", "producto__producto__pk", "producto__producto__descripcion", "producto__producto__categoria", "fecha_salida", "fecha_regreso")
     
     def get_all_products_rented(self) -> models.QuerySet:
-        return self.get_queryset().all().values("pk", "producto__pk", "producto__descripcion", "producto__no_serie", "fecha_salida", "fecha_regreso", "producto__categoria")
+        return self.get_queryset().all().values("pk", "producto__producto__pk", "producto__producto__descripcion", "producto__producto__no_serie", "fecha_salida", "fecha_regreso", "producto__producto__categoria")
     
     def filter_products_rented(self):
-        return self.get_queryset().filter(producto__disponible=True).values("pk", "producto__pk", "producto__descripcion", "producto__tamanio")
+        return self.get_queryset().filter(producto__producto__disponible=True).values("pk", "producto__producto__pk", "producto__producto__descripcion", "producto__producto__tamanio")
 
     def filter_products_by_name_size_rented(self, category: str):
-        return self.get_queryset().filter(producto__disponible=True, producto__categoria=category).annotate(models.Count("producto__descripcion"), models.Count("producto__tamanio")).values("producto__descripcion", "producto__tamanio", "producto__descripcion__count")
+        return self.get_queryset().filter(producto__producto__disponible=True, producto__producto__categoria=category).annotate(models.Count("producto__producto__descripcion"), models.Count("producto__producto__tamanio")).values("producto__producto__descripcion", "producto__producto__tamanio", "producto__producto__descripcion__count")
     
     def register_rent(self, product_model: models.Model, id_product: int, object_date: dict):
         new_rent = self.get_queryset().create(producto=product_model.objects.get(pk=id_product), fecha_salida=object_date.get("fsalida") if object_date.get("fsalida") else None,  fecha_regreso=object_date.get("fregreso") if object_date.get("fregreso") else None, cantidad=object_date.get("cantidad"))
@@ -143,3 +143,9 @@ class RentModelManager(models.Manager):
     
     def update_rent(self, product_model: models.Model, id: int, info: dict):
         self.get_queryset().filter(pk=id).update(fecha_salida=info.get("fsalida") if info.get("fsalida") else None, fecha_regreso=info.get("fregreso") if info.get("fregreso") else None, producto=product_model.objects.get(pk=info.get("id_product")))
+
+'''
+registrar venta de producto
+registrar renta de producto
+registrar uso de producto
+'''
