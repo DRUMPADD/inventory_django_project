@@ -1,10 +1,13 @@
 {% extends "includes/base.html" %}
 {% load static %}
 {% block title %}Equipo: {{ item.descripcion }}{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/inputs.css' %}">
+{% endblock %}
 {% block content %}
     {% if user.is_staff %}
         <span hidden class="url-update-item">{% url 'app:update_item' id_item=item.pk %}</span>
-        <span hidden class="url-update-item-use">{% url 'app:add_item_in_use' id=item.pk %}</span>
+        <span hidden class="url-update-item-use">{% url 'app:add_transaction_item' id=item.pk %}</span>
     {% endif %}
     <div class="container tool" id="product-info">
         <h2>{{ item.descripcion }}</h2>
@@ -54,7 +57,11 @@
             </p>
             <p class="content">
                 <span class="title-tool">Orden de compra (OC):</span>
-                <span>{{ item.orden_compra|default:"" }} <span>{{ item.tipo_orden_compra|default:"" }}</span></span>
+                <span>{{ item.orden_compra|default:"" }}</span>
+            </p>
+            <p class="content">
+                <span class="title-tool">Tipo de orden de compra:</span>
+                <span>{{ item.tipo_orden_compra|default:"" }}</span>
             </p>
             <p class="content" id="item">
                 <span class="title-tool">Status:</span>
@@ -77,7 +84,6 @@
                             <th>ID</th>
                             <th>Producto</th>
                             <th>Cantidad</th>
-                            <th>Fecha</th>
                             <th>Status</th>
                             <th>Condición</th>
                             {% if user.is_staff %}
@@ -89,12 +95,11 @@
                         {% for item in items_use %}
                             <tr>
                                 <td>{{ item.pk }}</td>
-                                <td>{{ item.producto__descripcion }}</td>
-                                <td>{{ item.cantidad_uso }}</td>
-                                <td>{{ item.fecha_uso }}</td>
-                                <td><p class="status status-{% if item.estado == 'Listo' %}success{% elif item.estado == 'Mantenimiento' %}warning {% elif item.estado == 'En uso' %}info{% else %}error{% endif %}">{{ item.estado }}</p></td>
+                                <td>{{ item.producto__producto__descripcion }}</td>
+                                <td>{{ item.cantidad }}</td>
+                                <td id-status="{{ item.estado }}"><p class="status status-{% if item.producto__estado == 'Listo' %}success{% elif item.producto__estado == 'Mantenimiento' %}warning {% elif item.producto__estado == 'En uso' %}info{% else %}error{% endif %}">{{ item.producto__estado }}</p></td>
                                 <td>
-                                    <p>{{ item.condicion }}</p>
+                                    <p>{{ item.producto__condiciones }}</p>
                                 </td>
                                 {% if user.is_staff %}
                                     <td id="{% url 'app:alter_item_in_use' id_product=item.producto__pk id_product_use=item.pk %}">
@@ -122,14 +127,16 @@
     </div>
     {% if user.is_staff %}
         <div class="form-container">
-            {% include "includes/forms/form_item.html" with item=item %}
+            {% include "includes/forms/form_item.html" with item=item category=item.categoria %}
         </div>
         <div class="form-container">
-            {% include "includes/forms/form_use_product.html" with type_producto='EQUIPO' item=item %}
+            {% include "includes/forms/form_use_product.html" with category=item.categoria item=item movement_types=movement_types status=status %}
         </div>
+        {% comment %}
         <div class="form-container">
-            {% include "includes/forms/form_use_product.html" with type_producto='EQUIPO' item_use=True %}
+            {% include "includes/forms/form_use_product.html" with category=item.categoria item_use=True movement_types=movement_types status=status %}
         </div>
+        {% endcomment %}
     {% endif %}
 {% endblock %}
 

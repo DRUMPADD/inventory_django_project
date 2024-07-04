@@ -1,0 +1,12 @@
+.table-container.table-history {
+    width: 90%;
+    height: 90%;
+    margin-top: 0;
+}
+
+.table-history .table {
+    height: 90vh;
+    margin-bottom: 0;
+    border-spacing: 0;
+    border-collapse: collapse;
+}

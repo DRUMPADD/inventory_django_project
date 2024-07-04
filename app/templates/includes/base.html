@@ -13,46 +13,73 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     {% block styles %}
     {% endblock %}
+    <script src="{% static 'js/main.js' %}" defer></script>
 </head>
-<body class="position-relative">
+<body class="position-relative preload">
     {% block navbar %}
     <nav>
+        <div class="hideMenu">
+            <div class="hide">X</div>
+            <div class="show">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
         <div class="logo">
             <div class="logo-content" style="--url-img: url({% static 'img/logo_imap.png' %})"></div>
         </div>
+        <div class="big-title">
+            <span>I</span>
+            <span>M</span>
+            <span>A</span>
+        </div>
+        <h1 class="title">IMA</h1>
         <h1 class="title">Inventario</h1>
         <div class="links-box">
             <ul class="links links-content">
-                <a href="{% url 'app:tools' %}" class="link">
-                    <span><ion-icon name="construct-outline"></ion-icon></span>
-                    <span>Herramientas especiales</span>
-                </a>
-                <a href="{% url 'app:items' %}" class="link">
-                    <span><ion-icon name="clipboard-outline"></ion-icon></span>
-                    <span>Almacen IMA</span>
-                </a>
-                <a href="{% url 'app:sales' %}" class="link">
-                    <span><ion-icon name="storefront-outline"></ion-icon></span>
-                    <span>Ventas</span>
-                </a>
-                <a href="{% url 'app:rents' %}" class="link">
-                    <span><ion-icon name="cash-outline"></ion-icon></span>
-                    <span>Rentas</span>
-                </a>
-                <a href="{% url 'app:history' %}" class="link">
-                    <span><ion-icon name="newspaper-outline"></ion-icon></span>
-                    <span>Historial</span>
-                </a>
+                <p class="title-dropdown">
+                    <span>Inventario</span>
+                    <span><i class="fa-solid fa-list-check"></i></span>
+                </p>
+                <div class="content">
+                    <a href="{% url 'app:tools' %}" class="link">
+                        <span><ion-icon name="construct-outline"></ion-icon></span>
+                        <span class="text-link">Herramientas especiales</span>
+                    </a>
+                    <a href="{% url 'app:items' %}" class="link">
+                        <span><ion-icon name="clipboard-outline"></ion-icon></span>
+                        <span class="text-link">Almacen IMA</span>
+                    </a>
+                    <a href="{% url 'app:sales' %}" class="link">
+                        <span><ion-icon name="storefront-outline"></ion-icon></span>
+                        <span class="text-link">Ventas</span>
+                    </a>
+                    <a href="{% url 'app:rents' %}" class="link">
+                        <span><ion-icon name="cash-outline"></ion-icon></span>
+                        <span class="text-link">Rentas</span>
+                    </a>
+                    <a href="{% url 'app:history' %}" class="link">
+                        <span><ion-icon name="newspaper-outline"></ion-icon></span>
+                        <span class="text-link">Historial</span>
+                    </a>
+                </div>
             </ul>
             <ul class="links">
-                <a href="https://1drv.ms/f/s!AhPPNO1MaPXCgccDylM82juyMxo3Hw?e=HofryZ" target="_blank" class="link">
-                    <span><ion-icon name="folder-outline"></ion-icon></span>
-                    <span>Carpeta IMA</span>
-                </a>
-                <a href="{% url 'app:signout' %}" class="link">
-                    <span><ion-icon name="log-out-outline"></ion-icon></span>
-                    <span>Cerrar sesión</span>
-                </a>
+                <p class="title-dropdown">
+                    <span>Configuración</span>
+                    <span><i class="fa-solid fa-user"></i></span>
+                </p>
+                <div class="content">
+                    <a href="https://1drv.ms/f/s!AhPPNO1MaPXCgccDylM82juyMxo3Hw?e=HofryZ" target="_blank" class="link">
+                        <span><ion-icon name="folder-outline"></ion-icon></span>
+                        <span class="text-link">Carpeta IMA</span>
+                    </a>
+                    <a href="{% url 'app:signout' %}" class="link">
+                        <span><ion-icon name="log-out-outline"></ion-icon></span>
+                        <span class="text-link">Cerrar sesión</span>
+                    </a>
+                </div>
             </ul>
         </div>
     </nav>
@@ -62,7 +89,6 @@
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.9.0/dist/sweetalert2.all.min.js"></script>
-    <script src="{% static 'js/main.js' %}"></script>
     {% block scripts %}
     {% endblock %}
 </body>

@@ -7,7 +7,7 @@
 {% endblock %}
 {% block content %}
 {% if user.is_staff %}
-    <span hidden class="url-add-tool">{% url 'app:add_tool' %}</span>
+    <span hidden class="url-add-tool">{% url 'app:add_product' %}</span>
 {% endif %}
 <div class="container">
     <h1 class="text-center">Herramientas especiales</h1>
@@ -56,11 +56,21 @@
                             <td>{{ tool.pk }}</td>
                             <td>{{ tool.descripcion }}</td>
                             <td>{{ tool.tamanio }}</td>
-                            <td><p class="status status-{% if tool.status == 'Listo' %}success{% elif tool.status == 'Mantenimiento' %}warning{% else %}error{% endif %}">{{ tool.status }}</p></td>
-                            <td class="btns">
-                                <button><a href="{% url 'app:tool' id_tool=tool.pk %}"><i class="fa-solid fa-eye"></i></a></button>
+                            <td>
+                                <p class="status status-{% if tool.status == 'Listo' %}success{% elif tool.status == 'Mantenimiento' %}warning{% else %}error{% endif %}">{{ tool.status }}</p>
+                            </td>
+                            <td class="btns gap-3">
+                                <button class="btn-info"><a href="{% url 'app:tool' id_tool=tool.pk %}"><i class="fa-solid fa-eye"></i></a></button>
+                                <button type="button" class="btn-warning btnProduct">
+                                    <p quantity="{{ tool.cantidad|default:0 }} {{ tool.pk }}" url="{% url 'app:dispose_product' id=tool.pk %}">
+                                        <i class="fa-solid fa-square-plus"></i>
+                                    </p>
+                                </button>
                                 {% if user.is_staff %}
-                                    <button><a href="{% url 'app:delete_product' id_product=tool.pk %}"><i class="fa-solid fa-trash"></i></a></button>
+                                    <form class="form-delete-tool">
+                                        {% csrf_token %}
+                                        <button class="btn-danger" type="submit" name="deleteProduct" id="{% url 'app:delete_product' id_product=tool.pk %}"><p><i class="fa-solid fa-trash"></i></p></button>
+                                    </form>
                                 {% endif %}
                             </td>
                         </tr>
@@ -109,6 +119,49 @@
 
     <div class="form-container">
         {% include "includes/forms/form_supplier.html" %}
+    </div>
+
+    <div class="form-container">
+        <form class="form-product">
+            {% csrf_token %}
+            <h3 style="text-align: center;">Disponer de producto: <span id="productName"></span></h3>
+            <span id="quantity" hidden></span>
+            <span id="url" hidden></span>
+            <input type="hidden" id="productid" name="productid" class="input-required" required>
+            <div class="box">
+                <div class="box-content">
+                    <section>
+                        <label for="quantity">Tamaño<span class="required">*</span></label>
+                        <input type="number" step="any" id="quantity" name="quantity" required>
+                    </section>
+                </div>
+                <div class="box-content">
+                    <section>
+                        <label for="condition">Condición</label>
+                        <input type="text" id="condition" name="condition">
+                    </section>
+                </div>
+                <div class="box-content">
+                    <section>
+                        <label for="sl_status">Status<span class="required">*</span></label>
+                        <select name="sl_status" id="sl_status" class="select-required" required>
+                            <option selected disabled>Seleccionar estado</option>
+                            <option value="Listo">Listo</option>
+                            <option value="Mantenimiento">Mantenimiento</option>
+                            <option value="Dañado">Dañado</option>
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="En espera">En espera</option>
+                        </select>
+                    </section>
+                </div>
+            </div>
+            <div class="box">
+                <div class="btns-form">
+                    <button type="submit">Registrar</button>
+                    <button type="button" class="close-form-container">Cancelar</button>
+                </div>
+            </div>
+        </form>
     </div>
 {% endif %}
 {% endblock %}

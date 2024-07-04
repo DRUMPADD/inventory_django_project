@@ -1,24 +1,29 @@
 {% load static %}
 {% if user.is_staff %}
-<form id="form-tool">
+<form class="form-tool">
     {% csrf_token %}
     <h1>{% if tool %} Actualizar herramienta: {{ tool.descripcion }} {% else %} Registrar herramienta {% endif %}</h1>
     {% if not tool %}
-    <div class="box">
-        <div class="box-content">
-            <section>
-                <label>Tipo de registro<span class="required">*</span></label>
-                <select name="sl_opcion" class="select-required" id="sl_opcion" required>
-                    <option selected disabled>Elige una opción</option>
-                    <option value="1">Venta</option>
-                    <option value="2">Renta</option>
-                    <option value="3">Disponible</option>
-                    <option value="4">Pendiente</option>
-                </select>
-            </section>
-        </div>
-    </div>
+        <input type="hidden" id="categoria" name="categoria" value="HERRAMIENTA" class="input-required" required>
     {% endif %}
+    {% comment %}
+        {% if not tool %}
+        <div class="box">
+            <div class="box-content">
+                <section>
+                    <label>Tipo de registro<span class="required">*</span></label>
+                    <select name="sl_opcion" class="select-required" id="sl_opcion" required>
+                        <option selected disabled>Elige una opción</option>
+                        <option value="1">Venta</option>
+                        <option value="2">Renta</option>
+                        <option value="3">Disponible</option>
+                        <option value="4">Pendiente</option>
+                    </select>
+                </section>
+            </div>
+        </div>
+        {% endif %}
+    {% endcomment %}
     <div class="box">
         <div class="box-content">
             <section>
@@ -107,28 +112,28 @@
                 </select>
             </section>
         </div>
-        {% if not tool %}
-            <div class="box-content">
-                <section>
-                    <label for="fsalida">Fecha de salida</label>
-                    <input type="date" id="fsalida" name="fsalida" style="--calendar-logo: url({% static 'img/calendar.png' %})">
-                </section>
-            </div>
-            <div class="box-content">
-                <section>
-                    <label for="fregreso">Fecha de regreso</label>
-                    <input type="date" id="fregreso" name="fregreso" style="--calendar-logo: url({% static 'img/calendar.png' %})">
-                </section>
-            </div>
-        {% endif %}
+        {% comment %}
+            {% if not tool %}
+                <div class="box-content">
+                    <section>
+                        <label for="fsalida">Fecha de salida</label>
+                        <input type="date" id="fsalida" name="fsalida" style="--calendar-logo: url({% static 'img/calendar.png' %})">
+                    </section>
+                </div>
+                <div class="box-content">
+                    <section>
+                        <label for="fregreso">Fecha de regreso</label>
+                        <input type="date" id="fregreso" name="fregreso" style="--calendar-logo: url({% static 'img/calendar.png' %})">
+                    </section>
+                </div>
+            {% endif %}
+        {% endcomment %}
         <div class="box-content">
             <section>
                 <label for="pozo">Pozo</label>
                 <input type="text" id="pozo" name="pozo" {% if tool %} value="{{ tool.pozo }}" {% endif %}>
             </section>
         </div>
-    </div>
-    <div class="box">
         <div class="box-content">
             <section>
                 <label for="observaciones">Observaciones</label>

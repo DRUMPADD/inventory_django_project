@@ -1,5 +1,7 @@
-<form class="form-item">
-    <h1>Registrar uso de {% if type_product == 'HERRAMIENTA' %}herramienta{% else %}equipo{% endif %}</h1>
+{% load static %}
+
+<form {% if category == 'HERRAMIENTA' %}class="form-tool"{% else %}class="form-item"{% endif %}>
+    <h1>Registrar uso de {% if category == 'HERRAMIENTA' %}herramienta{% else %}equipo{% endif %}</h1>
     {% csrf_token %}
     {% if item_use %}
         <input type="hidden" name="url">
@@ -11,17 +13,57 @@
         <div class="box-content">
             <section>
                 <label for="cantidad_uso">Cantidad</label>
-                <input type="number" step="any" name="cantidad_uso" id="cantidad_uso" {% if item %} value="{{ item.cantidad|default:0 }}" {% endif%}>
+                <input type="number" step="any" name="cantidad_uso" id="cantidad_uso" {% if item %} value="{{ item.cantidad|default:0 }}" {% endif %}>
             </section>
         </div>
+        {% if not item_use %}
+            <div class="box-content">
+                <section>
+                    <label for="sl_tipo_mov">Tipo de movimiento<span class="required">*</span></label>
+                    <select name="sl_tipo_mov" id="sl_tipo_mov" class="select-required" required>
+                        <option selected disabled>Selecciona tipo de movimiento</option>
+                        {% if category == 'HERRAMIENTA' %}
+                        <option value="RENTA">Renta</option>
+                        <option value="VENTA">Venta</option>
+                        {% else %}
+                        <option value="USO">Uso</option>
+                        <option value="RENTA">Renta</option>
+                        {% endif %}
+                        {% comment %}
+                        {% for type in movement_types %}
+                        {% if type.nombre != 'VENTA' %}
+                        {% endif %}
+                        {% endfor %}
+                        {% endcomment %}
+                    </select>
+                </section>
+            </div>
+        {% endif %}
+        {% comment %}
         <div class="box-content">
             <section>
-                <label for="sl_status">Status</label>
-                <select name="sl_status" id="sl_status" class="select-required">
-                    <option selected value="En uso" >En uso</option>
-                    <option value="Listo" >Listo</option>
-                    <option value="Mantenimiento" >Mantenimiento</option>
-                    <option value="Dañado" >Dañado</option>
+                <label for="sl_status">Status<span class="required">*</span></label>
+                <select name="sl_status" id="sl_status" class="select-required" required>
+                    {% for s in status %}
+                    {% if s.nombre == 'USO' %}
+                    <option selected value="{{ s.pk }}">{{ s.descripcion }}</option>
+                    {% endif %}
+                    <option value="{{ s.pk }}">{{ s.descripcion }}</option>
+                    {% endfor %}
+                </select>
+            </section>
+        </div>
+        {% endcomment %}
+        <div class="box-content">
+            <section>
+                <label for="sl_status">Status<span class="required">*</span></label>
+                <select name="sl_status" id="sl_status" class="select-required" required>
+                    <option selected disabled>Seleccionar estado</option>
+                    <option value="Listo">Listo</option>
+                    <option value="Mantenimiento">Mantenimiento</option>
+                    <option value="Dañado">Dañado</option>
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="En espera">En espera</option>
                 </select>
             </section>
         </div>
@@ -29,6 +71,20 @@
             <section>
                 <label for="condicion">Condición</label>
                 <input type="text" name="condicion" id="condicion" {% if item %} value="{{ item.condicion|default:'' }}" {% endif%}>
+            </section>
+        </div>
+    </div>
+    <div class="box inp-fechas">
+        <div class="box-content inp-fsalida">
+            <section>
+                <label for="fsalida">Fecha de salida</label>
+                <input type="date" id="fsalida" name="fsalida" style="--calendar-logo: url({% static 'img/calendar.png' %})">
+            </section>
+        </div>
+        <div class="box-content inp-fregreso">
+            <section>
+                <label for="fregreso">Fecha de regreso</label>
+                <input type="date" id="fregreso" name="fregreso" style="--calendar-logo: url({% static 'img/calendar.png' %})">
             </section>
         </div>
     </div>

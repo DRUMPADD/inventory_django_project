@@ -1,32 +1,36 @@
 from django.contrib import admin
-from . import models
+from .models import *
 # Register your models here.
-@admin.register(models.MyCustomUser)
-class CustomUserModelView(admin.ModelAdmin):
-    model = models.MyCustomUser
-    list_display = ('username', 'name_user','middle_name', 'last_name', 'password', 'is_superuser', 'is_staff', 'is_active')
 
-@admin.register(models.Producto)
+@admin.register(MyCustomUser)
+class UserModelView(admin.ModelAdmin):
+    list_display = ('username', 'name_user', 'middle_name', 'last_name', 'is_staff', 'is_superuser', 'is_active',)
+    search_fields = ['username']
+    list_filter = ['is_superuser', 'is_staff', 'is_active']
+@admin.register(Proveedor)
+class SupplierModelView(admin.ModelAdmin):
+    list_display = ('folio', 'nombre',)
+    search_fields = ['folio', 'nombre']
+
+@admin.register(Producto)
 class ProductModelView(admin.ModelAdmin):
-    model = models.Producto
-    list_display = ('pk', 'descripcion', 'codigo', 'cantidad', 'proveedor', 'tamanio', 'libraje', 'conexion', 'conexion_medida', 'no_serie', 'no_serie_interno', 'orden_compra', 'tipo_orden_compra', 'status', 'pozo', 'observaciones', 'modelo', 'marca', 'area','resguardo','categoria', 'disponible')
+    list_display = ('descripcion', 'cantidad', 'codigo', 'status', 'disponible',)
+    search_fields = ['descripcion', 'codigo']
+    list_filter = ['disponible', 'categoria']
 
-@admin.register(models.Proveedor)
-class ProductModelView(admin.ModelAdmin):
-    model = models.Proveedor
-    list_display = ('folio', 'nombre')
+@admin.register(Estados_de_producto)
+class StateProductModelView(admin.ModelAdmin):
+    list_display = ('producto', 'cantidad_disponible', 'estado', 'fecha_hora',)
+    search_fields = ['producto__descripcion', 'condiciones', 'fecha_hora']
+    list_filter = ['estado']
 
-@admin.register(models.Venta)
-class SaleModelView(admin.ModelAdmin):
-    model = models.Venta
-    list_display = ('pk', 'producto')
-
-@admin.register(models.Renta)
-class RentModelView(admin.ModelAdmin):
-    model = models.Renta
-    list_display = ('pk', 'producto')
-
-@admin.register(models.Historial)
-class RentModelView(admin.ModelAdmin):
-    model = models.Historial
-    list_display = ('usuario', 'descripcion', 'venta', 'renta', 'fecha_hora')
+@admin.register(Movimiento)
+class MovementsModelView(admin.ModelAdmin):
+    list_display = ('producto', 'cantidad', 'estado', 'fecha_salida', 'fecha_regreso',)
+    search_fields = ['producto__producto__descripcion', 'fecha_salida', 'fecha_regreso']
+    list_filter = ['estado', 'tipo_movimiento']
+    
+@admin.register(Historial)
+class HistoryModelView(admin.ModelAdmin):
+    list_display = ('usuario', 'producto', 'movimiento', 'fecha_hora',)
+    search_fields = ['usuario', 'producto', 'descripcion']

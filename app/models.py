@@ -1,8 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from django.utils import timezone
-from .managers import CustomUserManager, ProductModelManager, SaleModelManager, RentModelManager
-from datetime import datetime
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+# from django.utils import timezone
+from .managers import CustomUserManager, ProductModelManager, TransactionsManager, HistoryChangeManager, StateProductManager
 # Create your models here.
 
 class MyCustomUser(AbstractBaseUser, PermissionsMixin):
@@ -19,31 +18,26 @@ class MyCustomUser(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['name_user','middle_name', 'last_name']
     
+    class Meta:
+        db_table = 'usuarios'
+
     def __str__(self) -> str:
         return f'{self.username}'
-
-
-
-'''
-Productos
-Proveedor
-Usuario
-Renta
-Venta
-Historial
-'''
 
 
 class Proveedor(models.Model):
     folio = models.CharField(max_length=50, primary_key=True)
     nombre = models.CharField(max_length=200)
     
+    class Meta:
+        db_table = 'proveedores'
+
     def __str__(self):
         return self.folio
 
 class Producto(models.Model):
     def __str__(self) -> str:
-        return f'{self.pk}'
+        return f'{self.pk}.- {self.descripcion}'
     
     descripcion = models.CharField(max_length=255)
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, blank=True, null=True)
@@ -71,37 +65,51 @@ class Producto(models.Model):
     objects = models.Manager()
     products = ProductModelManager()
 
+    class Meta:
+        db_table = 'productos'
 
-class Venta(models.Model):
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
-    fecha_salida = models.DateField(null=True, blank=True)
+class Estados_de_producto(models.Model):
+    producto = models.ForeignKey(Producto, on_delete=models.SET_NULL, null=True)
+    cantidad_disponible = models.FloatField()
+    estado = models.CharField(max_length=100)
+    fecha_hora = models.DateTimeField(auto_now_add=True)
+    condiciones = models.TextField(default="")
     objects = models.Manager()
-    sales = SaleModelManager()
-
-class Renta(models.Model):
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
-    cantidad = models.FloatField(default=0)
-    fecha_salida = models.DateField(null=True, blank=True)
-    fecha_regreso = models.DateField(null=True, blank=True)
-    objects = models.Manager()
-    rents = RentModelManager()
-
-class Producto_uso(models.Model):
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
-    cantidad_uso = models.FloatField(default=0, blank=True)
-    fecha_uso = models.DateTimeField(auto_now_add=datetime.now, blank=True)
-    estado = models.CharField(max_length=30, default="Listo", blank=True)
-    condicion = models.TextField(default="", blank=True)
+    uses = StateProductManager()
 
     class Meta:
-        db_table = 'Producto_uso'
+        db_table = 'estados_producto'
+    
+    def __str__(self) -> str:
+        return f'{self.producto}'
+
+
+class Movimiento(models.Model):
+    producto = models.ForeignKey(Estados_de_producto, on_delete=models.CASCADE)
+    tipo_movimiento = models.CharField(max_length=50)
+    cantidad = models.FloatField()
+    estado = models.CharField(default="", max_length=60, null=True)
+    fecha_salida = models.DateField(null=True, blank=True)
+    fecha_regreso = models.DateField(null=True, blank=True)
+    movements = TransactionsManager()
+    objects = models.Manager()
+
+    class Meta:
+        db_table = 'movimientos'
+    
+    def __str__(self) -> str:
+        return f'{self.pk}.- {self.producto.producto.descripcion}'
 
 class Historial(models.Model):
-    usuario = models.ForeignKey(MyCustomUser, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(MyCustomUser, on_delete=models.SET_NULL, null=True)
+    producto = models.ForeignKey(Producto, on_delete=models.SET_NULL, null=True)
+    movimiento = models.ForeignKey(Movimiento, on_delete=models.SET_NULL, null=True)
     descripcion = models.TextField()
-    venta = models.ForeignKey(Venta, on_delete=models.CASCADE, null=True, blank=True)
-    renta = models.ForeignKey(Renta, on_delete=models.CASCADE, null=True, blank=True)
-    fecha_hora = models.DateTimeField(default=timezone.now)
+    fecha_hora = models.DateTimeField(auto_now_add=True)
+    objects = models.Manager()
+
+    class Meta:
+        db_table = 'historial'
 
     def get_history(self):
-        return self.objects.all().values("pk", "venta", "renta", "descripcion", "fecha_hora", "usuario", "usuario__name_user", "venta__producto__descripcion", "renta__producto__descripcion")
+        return self.objects.all().values("pk", "descripcion", "fecha_hora", "usuario", "usuario__name_user", "producto__descripcion")

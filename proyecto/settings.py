@@ -12,7 +12,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
-
+from dotenv import load_dotenv
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -94,7 +95,7 @@ DATABASES = {
     # }
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('MYSQL_NAME'),
+        'NAME': os.environ.get('MYSQL_NAME_DEVELOP'),
         'USER': os.environ.get('MYSQL_USER'),
         'PASSWORD': os.environ.get('MYSQL_PASSWORD'),
         'HOST': os.environ.get('MYSQL_HOST'),
@@ -152,7 +153,7 @@ if not DEBUG:
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = "public/"
+STATIC_URL = "static/"
 
 from .cdn.conf import *
 
@@ -160,9 +161,9 @@ from .cdn.conf import *
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-STATIC_ROOT = os.path.join(str(os.environ.get("DJANGO_ALLOWED_HOST")),'staticfiles', 'public')
-MEDIA_ROOT = os.path.join(str(os.environ.get("DJANGO_ALLOWED_HOST")),'staticfiles', 'media')
+STATIC_ROOT = os.path.join(str(os.environ.get("DJANGO_ALLOWED_HOST")),'staticfiles', 'static')
+MEDIA_ROOT = os.path.join(str(os.environ.get("DJANGO_ALLOWED_HOST")),'staticfiles', 'files')
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "app", "public")
+    os.path.join(BASE_DIR, "app", "static")
 ]

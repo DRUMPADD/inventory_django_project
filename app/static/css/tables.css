@@ -52,15 +52,20 @@
 }
 
 .product-list .products > .info-product {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(0,max-content));
+    display: flex;
+    justify-content: center;
+    /* grid-template-columns: repeat(auto-fit, minmax(0,max-content)); */
     width: 100%;
-    place-content: center;
+    align-items: center;
     padding: 4px 0px;
     color: #000;
+    overflow: hidden;
 }
-.product-list .products > .info-product span {
+.product-list .products > .info-product .text-product {
     width: 200px;
+    /* border: 1px solid #000; */
+    display: block;
+    overflow: hidden;
 }
 .product-list .products > .info-product:nth-child(even) {
     background: #f8df1e;

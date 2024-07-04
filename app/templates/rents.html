@@ -7,6 +7,37 @@
 {% block content %}
     <div class="container">
         <h1 class="text-center">Herramientas y equipos rentados</h1>
-        {% include "includes/tables/table_movements.html" with is_rent=True movements=rents %}
+        <div class="table-container">
+            <div class="btns flex-between">
+                <select name="sl_category" class="form-select" id="sl_category">
+                    <option selected value="">Todos</option>
+                    <option value="HERRAMIENTA">Herramientas</option>
+                    <option value="EQUIPO">Equipos</option>
+                </select>
+            </div>
+            {% include "includes/tables/table_movements.html" with is_rent=True movements=rents %}
+        </div>
     </div>
 {% endblock %}
+{% if user.is_staff %}
+    {% block scripts %}
+        <script src="{% static 'js/rents.js' %}"></script>
+        <script>
+            const slCategory = document.querySelector("select[name='sl_category']");
+            const tableData = document.querySelectorAll("tbody tr");
+    
+            slCategory.addEventListener("change", (e) => {
+                const option_selected = e.target.value;
+    
+                tableData.forEach(tr => {
+                    const type_product = tr.getAttribute("type_product")
+                    if(type_product.toLowerCase().indexOf(option_selected.toLowerCase()) > -1) {
+                        tr.style.display = "table-row"
+                    } else {
+                        tr.style.display = "none"
+                    }
+                })
+            })
+        </script>
+    {% endblock %}
+{% endif %}

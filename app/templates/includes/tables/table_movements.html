@@ -1,40 +1,71 @@
-<div class="table-container">
-    <div class="table">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Producto</th>
-                    <th>No. serie</th>
-                    <th>Fecha de salida</th>
+<div class="table">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Producto</th>
+                <th>No. serie</th>
+                <th>Cantidad</th>
+                <th>Fecha de salida</th>
+                {% if is_rent %}
+                <th>Fecha de regreso</th>
+                {% endif %}
+                {% if user.is_staff %}
+                <th>Acciones</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody id="data-list">
+            {% for movement_info in movements %}
+                <tr type_product="{{ movement_info.producto__producto__categoria }}">
+                    <td>{{ movement_info.pk }}</td>
+                    <td>{{ movement_info.producto__producto__descripcion|default:"" }}</td>
+                    <td>{{ movement_info.producto__no_serie|default:"S/N" }}</td>
+                    <td>{{ movement_info.cantidad|default:"" }}</td>
+                    <td>{{ movement_info.fecha_salida|default:"Sin fecha" }}</td>
                     {% if is_rent %}
-                    <th>Fecha de regreso</th>
+                    <td>{{ movement_info.fecha_regreso|default:"Sin fecha" }}</td>
                     {% endif %}
-                    {% if user.is_staff %}
-                    <th>Acciones</th>
-                    {% endif %}
-                </tr>
-            </thead>
-            <tbody id="data-list">
-                {% for movement_info in movements %}
-                    <tr>
-                        <td>{{ movement_info.pk }}</td>
-                        <td>{% if movement_info.producto__categoria == 'HERRAMIENTA' %}Herramienta{% else %}Equipo{% endif %}: {{ movement_info.producto__descripcion|default:"" }}</td>
-                        <td>{{ movement_info.producto__no_serie|default:"" }}</td>
-                        <td>{{ movement_info.fecha_salida|default:"Sin fecha" }}</td>
+                    <td class="btns flex-center">
                         {% if is_rent %}
-                        <td>{{ movement_info.fecha_regreso|default:"Sin fecha" }}</td>
+                            <button class="btn-info" style="border-radius: 50%; padding: 0" {% if movement_info.estado__pk == 6 %} disabled {% endif %}">
+                                <a {% if movement_info.estado__pk != 6 %} href="{% url 'app:movement' id_mov=movement_info.pk option=2 %}" {% endif %}">
+                                    <i class="fa-solid fa-eye {% if movement_info.estado == 6 %} disabled {% endif %}""></i>
+                                </a>
+                            </button>
+                            <form id="form-rent-product" class="form-rent-product">
+                                {% csrf_token %}
+                                <button type="submit" {% if movement_info.estado__pk == 6 %} disabled {% endif %} class="btn-text" style="border-radius: 50%; padding: 0" id="{% url 'app:return_rent' id_rent=movement_info.pk %}" name="returnRent">
+                                    <p><i class="fa-solid fa-rotate-left {% if movement_info.estado__pk == 6 %} disabled {% endif %}"></i></p>
+                                    <span class="texthover">Devolver producto</span>
+                                </button>
+                            </form>
+                            <form class="form-cancel-product">
+                                {% csrf_token %}
+                                <button class="btn-danger btn-text" style="border-radius: 50%; padding: 0" id="{% url 'app:cancel_rent' id_rent=movement_info.pk %}" name="cancelRent">
+                                    <p>
+                                    <i class="fa-solid fa-ban"></i></p>
+                                    <span class="texthover">Cancelar producto</span>
+                                </button>
+                            </form>
+                        {% else %}
+                            <button class="btn-info" style="border-radius: 50%; padding: 0">
+                                <a href="{% url 'app:movement' id_mov=movement_info.pk option=1 %}">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                            </button>
+                            <form class="form-cancel-product">
+                                {% csrf_token %}
+                                <button class="btn-danger btn-text" style="border-radius: 50%; padding: 0" id="{% url 'app:cancel_sale' id_sale=movement_info.pk %}" name="cancelRent">
+                                    <p>
+                                    <i class="fa-solid fa-ban"></i></p>
+                                    <span class="texthover">Cancelar producto</span>
+                                </button>
+                            </form>
                         {% endif %}
-                        <td class="btns">
-                            {% if is_rent %}
-                            <button><a href="{% url 'app:movement' id_mov=movement_info.pk option=2 %}"><i class="fa-solid fa-eye"></i></a></button>
-                            {% else %}
-                            <button><a href="{% url 'app:movement' id_mov=movement_info.pk option=1 %}"><i class="fa-solid fa-eye"></i></a></button>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>

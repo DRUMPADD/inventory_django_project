@@ -11,8 +11,8 @@ formItems[0]?.addEventListener("submit", async(e) => {
                 'mode': 'same-origin',
             },
             body: JSON.stringify({
-                sl_opcion: formItems[0]["sl_opcion"].value,
-                articulo: formItems[0]["articulo"].value,
+                // sl_opcion: formItems[0]["sl_opcion"].value,
+                producto: formItems[0]["articulo"].value,
                 tamanio: formItems[0]["tamanio"].value,
                 cantidad: formItems[0]["cantidad"].value,
                 area: formItems[0]["area"].value,
@@ -24,22 +24,23 @@ formItems[0]?.addEventListener("submit", async(e) => {
                 noseriei: formItems[0]["noseriei"].value,
                 cantidad: formItems[0]["cantidad"].value,
                 proveedor: formItems[0]["proveedor"].value,
+                categoria: formItems[0]["categoria"].value,
                 oc: formItems[0]["oc"].value,
                 sl_opcion_oc: formItems[0]["sl_opcion_oc"].value,
                 status: formItems[0]["status"].value,
-                fsalida: formItems[0]["fsalida"]?.value ?? "",
-                fregreso: formItems[0]["fregreso"]?.value ?? "",
+                // fsalida: formItems[0]["fsalida"]?.value ?? "",
+                // fregreso: formItems[0]["fregreso"]?.value ?? "",
             })
         });
         if(response.status != 201) throw new Error(response.statusText);
         const data = await response.json();
         await Swal.fire({
-            title: response.status == 201 ? 'Éxito!' : null,
-            icon: response.status == 201 ? 'success' : "warning",
+            title: data.status == 201 ? 'Éxito!' : null,
+            icon: data.status == 201 ? 'success' : "warning",
             text: data.message,
-            position: response.status == 201 ? 'center' : 'top-end'
+            position: 'center'
         })
-        if(response.status == 201) {
+        if(data.status == 201) {
             formContainer[0]?.classList.toggle("opened");
             window.location.reload();
         }
@@ -47,7 +48,7 @@ formItems[0]?.addEventListener("submit", async(e) => {
         Swal.fire({
             icon: 'error',
             text: 'Ha ocurrido un error',
-            position: 'top-end'
+            position: 'center'
         })
     }
 })

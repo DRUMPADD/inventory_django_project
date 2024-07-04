@@ -2,8 +2,8 @@
 {% load static %}
 {% block title %}Historial{% endblock %}
 {% block styles %}
-<link rel="stylesheet" href="{% static 'css/history.css' %}">
-<link rel="stylesheet" href="{% static 'css/search.css' %}">
+    <link rel="stylesheet" href="{% static 'css/history.css' %}">
+    <link rel="stylesheet" href="{% static 'css/search.css' %}">
 {% endblock %}
 {% block content %}
 <div class="container">
@@ -30,31 +30,22 @@
                 </thead>
                 <tbody id="data-list">
                     {% for h in history %}
-                        {% if h.venta %}
-                            <tr>
-                                <td>{{ h.pk }}</td>
-                                <td>{{ h.usuario__name_user }}</td>
+                        <tr>
+                            <td>{{ h.pk }}</td>
+                            <td>{{ h.usuario__name_user }}</td>
+                            <td>{{ h.producto__descripcion }}</td>
+                            {% comment %}
+                                {% if h.venta %}
                                 <td>{{ h.venta__producto__descripcion }}</td>
-                                <td>{{ h.descripcion }}</td>
-                                <td>{{ h.fecha_hora|date:"j F o h:i A" }}</td>
-                            </tr>
-                        {% elif h.renta %}
-                            <tr>
-                                <td>{{ h.pk }}</td>
-                                <td>{{ h.usuario__name_user }}</td>
+                                {% elif h.renta %}
                                 <td>{{ h.renta__producto__descripcion }}</td>
-                                <td>{{ h.descripcion }}</td>
-                                <td>{{ h.fecha_hora|date:"j F o h:i A" }}</td>
-                            </tr>
-                        {% else %}
-                            <tr>
-                                <td>{{ h.pk }}</td>
-                                <td>{{ h.usuario__name_user }}</td>
+                                {% else %}
                                 <td>{% if 'Registró' in h.descripcion %} {{ h.descripcion|cut:"Registró nuevo producto: "|capfirst }} {% elif 'Modificó' in h.descripcion %} {{ h.descripcion|cut:"Modificó"|capfirst }}{% elif 'Eliminó' in h.descripcion %} {{ h.descripcion|cut:"Eliminó"|capfirst }} {% else %} {{ h.descripcion|cut:'Salida de producto en uso'|cut:', cantidad actual:' }} {% endif %}</td>
-                                <td>{{ h.descripcion }}</td>
-                                <td>{{ h.fecha_hora|date:"j F o h:i A" }}</td>
-                            </tr>
-                        {% endif %}
+                                {% endif %}
+                            {% endcomment %}
+                            <td>{{ h.descripcion }}</td>
+                            <td>{{ h.fecha_hora|date:"j F o h:i A" }}</td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>

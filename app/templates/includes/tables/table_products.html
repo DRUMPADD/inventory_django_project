@@ -16,9 +16,9 @@
             {% if is_movement %}
                 {% for product in query %}
                     <p class="info-product">
-                        <span class="text-product">{{ product.producto__descripcion }}</span>
-                        <span class="text-product">{{ product.producto__tamanio }}</span>
-                        <span class="text-product">{{ product.producto__descripcion__count }}</span>
+                        <span class="text-product">{{ product.producto__producto__descripcion }}</span>
+                        <span class="text-product">{{ product.producto__producto__tamanio }}</span>
+                        <span class="text-product">{{ product.total }}</span>
                     </p>
                 {% endfor %}
             {% else %}
@@ -33,9 +33,9 @@
         {% else %}
             {% for product in query %}
                 <a class="info-product" href="{% url 'app:movement' option=option_selected id_mov=product.pk %}">
-                    <span class="text-product">{{ product.producto__pk }}</span>
-                    <span class="text-product">{{ product.producto__descripcion }}</span>
-                    <span class="text-product">{{ product.producto__tamanio }}</span>
+                    <span class="text-product">{{ product.producto__producto__pk }}</span>
+                    <span class="text-product">{{ product.producto__producto__descripcion }}</span>
+                    <span class="text-product">{{ product.producto__producto__tamanio }}</span>
                 </a>
             {% endfor %}
         {% endif %}

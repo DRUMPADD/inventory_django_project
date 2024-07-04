@@ -1,78 +1,376 @@
 {% extends "includes/base.html" %}
 {% load static %}
 {% block title %}Herramienta: {{ tool.descripcion }}{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/inputs.css' %}">
+{% endblock %}
 {% block content %}
 {% if user.is_staff %}
     <span hidden class="url-update-tool">{% url 'app:update_tool' id_tool=tool.pk %}</span>
+    {% if not tool_using %}
+        <span hidden class="url-dispose-product">{% url 'app:dispose_product' id=tool.pk %}</span>
+    {% endif %}
+    <span hidden class="url-update-item-use">{% url 'app:add_transaction_tool' id=tool.pk %}</span>
+    <span hidden class="url-update-state-product">{% url 'app:alter_state_product' id_product=tool.pk id_product_state=tool_using.pk %}</span>
 {% endif %}
-    <div class="container tool" id="product-info">
-        <h2>{{ tool.descripcion }}</h2>
-        <div class="btns">
-            <a href="{% url 'app:tools' %}" class="btn-back"><ion-icon name="arrow-undo-outline"></ion-icon></a>
-        </div>
-        <div class="tool-content-info flex">
-            <p>
-                <span class="title-tool">Código:</span>
-                <span>{{ tool.codigo|default:"" }}</span>
-            </p>
-            <p>
-                <span class="title-tool">Tamaño:</span>
-                <span>{{ tool.tamanio }}</span>
-            </p>
-            <p>
-                <span class="title-tool">Libraje:</span>
-                <span>{{ tool.libraje }}</span>
-            </p>
-            <p>
-                <span class="title-tool">Cantidad:</span>
-                <span>{{ tool.cantidad|default:0 }}</span>
-            </p>
-        </div>
-        <div class="tool-content-info">
-            <p class="content">
-                <span class="title-tool">Conexión:</span>
-                <span>{{ tool.conexion }}<span>{{ tool.conexion_medida }}</span></span>
-            </p>
-            <p class="content">
-                <span class="title-tool">No. serie:</span>
-                <span>{{ tool.no_serie|default:"" }}</span>
-            </p>
-            <p class="content">
-                <span class="title-tool">No. serie interno:</span>
-                <span>{{ tool.no_serie_interno|default:"" }}</span>
-            </p>
-            <p class="content">
-                <span class="title-tool">Proveedor:</span>
-                <span>{{ tool.proveedor__nombre|default:"Sin proveedor" }}</span>
-            </p>
-            <p class="content">
-                <span class="title-tool">Orden de compra (OC):</span>
-                <span>{{ tool.orden_compra|default:"" }} <span>{{ tool.tipo_orden_compra|default:"" }}</span></span>
-            </p>
-            <p class="content">
-                <span class="title-tool">Status:</span>
-                <span>{{ tool.status|default:"" }}</span>
-            </p>
-            <p class="content">
-                <span class="title-tool">Pozo:</span>
-                <span>{{ tool.pozo|default:"" }}</span>
-            </p>
-            <p class="content">
-                <span class="title-tool">Observaciones:</span>
-                <span>{{ tool.observaciones|default:"Sin observaciones" }}</span>
-            </p>
-        </div>
-        {% if user.is_staff %}
-        <div class="btns btn-tools">
-            <button type="button" class="open-form-container">Actualizar datos</button>
-        </div>
-        {% endif %}
+<span hidden id="quantity_available">{{ tool.cantidad }}</span>
+<div class="container tool" id="product-info">
+    <h2>{{ tool.descripcion }}</h2>
+    <div class="btns">
+        <a href="{% url 'app:tools' %}" class="btn-back"><ion-icon name="arrow-undo-outline"></ion-icon></a>
+    </div>
+    <div class="tool-content-info flex">
+        <p>
+            <span class="title-tool">Código:</span>
+            <span>{{ tool.codigo|default:"" }}</span>
+        </p>
+        <p>
+            <span class="title-tool">Tamaño:</span>
+            <span>{{ tool.tamanio }}</span>
+        </p>
+        <p>
+            <span class="title-tool">Libraje:</span>
+            <span>{{ tool.libraje }}</span>
+        </p>
+        <p>
+            <span class="title-tool">Cantidad:</span>
+            <span>{{ tool.cantidad|default:0 }}</span>
+        </p>
+    </div>
+    <div class="tool-content-info">
+        <p class="content">
+            <span class="title-tool">Conexión:</span>
+            <span>{{ tool.conexion }}<span>{{ tool.conexion_medida }}</span></span>
+        </p>
+        <p class="content">
+            <span class="title-tool">No. serie:</span>
+            <span>{{ tool.no_serie|default:"" }}</span>
+        </p>
+        <p class="content">
+            <span class="title-tool">No. serie interno:</span>
+            <span>{{ tool.no_serie_interno|default:"" }}</span>
+        </p>
+        <p class="content">
+            <span class="title-tool">Proveedor:</span>
+            <span>{{ tool.proveedor__nombre|default:"Sin proveedor" }}</span>
+        </p>
+        <p class="content">
+            <span class="title-tool">Orden de compra (OC):</span>
+            <span>{{ tool.orden_compra|default:"" }} <span>{{ tool.tipo_orden_compra|default:"" }}</span></span>
+        </p>
+        <p class="content">
+            <span class="title-tool">Status:</span>
+            <span>{{ tool.status|default:"" }}</span>
+        </p>
+        <p class="content">
+            <span class="title-tool">Pozo:</span>
+            <span>{{ tool.pozo|default:"" }}</span>
+        </p>
+        <p class="content">
+            <span class="title-tool">Observaciones:</span>
+            <span>{{ tool.observaciones|default:"Sin observaciones" }}</span>
+        </p>
     </div>
     {% if user.is_staff %}
-        <div class="form-container">
-            {% include "includes/forms/form_tool.html" with tool=tool %}
-        </div>
+    <div class="btns btn-tools">
+        <button type="button" class="open-form-container">Actualizar datos</button>
+        {% if not tool_using %}
+        <button type="button" class="open-form-container">Disponer uso de herramienta</button>
+        {% endif %}
+    </div>
     {% endif %}
+    <div class="table-container">
+        <h1>Historial de uso de equipo</h1>
+        <div class="table">
+            <table>
+                <thead>
+                    <tr>
+                        <th hidden>ID</th>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Estado</th>
+                        <th>Condición</th>
+                        {% if user.is_staff %}
+                            <th>Acciones</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody id="data-list">
+                    <tr>
+                        <td hidden>{{ tool_using.pk }}</td>
+                        <td>{{ tool_using.producto.descripcion }}</td>
+                        <td>{{ tool_using.cantidad_disponible }}</td>
+                        <td id-status="{{ tool_using.estado }}">
+                            <p class="status status-{% if tool_using.estado == 'Listo' %}success{% elif tool_using.estado == 'Mantenimiento' %}warning{% elif tool_using.estado == 'En uso' %}info{% elif tool_using.estado == 'Dañado' %}error{% else %}disabled{% endif %}">{{ tool_using.estado }}</p>
+                        </td>
+                        <td>
+                            <p>{{ tool_using.condiciones|default:"Sin condiciones" }}</p>
+                        </td>
+                        {% if user.is_staff %}
+                            <td class="flex-between" id="{% url 'app:alter_item_in_use' id_product=tool.pk id_product_use=tool_using.pk %}">
+                                <button type="button" class="status status-info btnUpdate" style="width: 35px; height: 35px; margin: 0 auto; border-radius: 50%; display: flex; align-items: center; justify-content: center">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <button type="button"  class="status btnUseProduct" style="width: 35px; height: 35px; margin: 0 auto; border-radius: 50%; display: flex; align-items: center; justify-content: center">
+                                    <div style="width: 100%; height: 100%; display: flex; justify-content: center">
+                                        <img src="{% static 'img/icon-add-item.png' %}" width="30px" alt="Usar producto">
+                                    </div>
+                                </button>
+                            </td>
+                        {% endif %}
+                    </tr>
+                    {% comment %}
+                    {% for item in items_use %}
+                    {% endfor %}
+                    {% endcomment %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% if user.is_staff %}
+    <div class="form-container">
+        {% include "includes/forms/form_tool.html" with tool=tool category=tool.categoria %}
+    </div>
+    <div class="form-container">
+        <form class="form-tool">
+            {% csrf_token %}
+            <h3 style="text-align: center;">Disponer de herramienta: {{ tool.descripcion }}</h3>
+            <span id="url" hidden></span>
+            <input type="hidden" id="productid" name="productid" class="input-required" required>
+            <div class="box">
+                <div class="box-content">
+                    <section>
+                        <label for="quantity">Cantidad<span class="required">*</span></label>
+                        <input type="number" step="any" id="quantity" name="quantity" max="{{ tool.cantidad }}" value="{{ tool.cantidad }}" required>
+                    </section>
+                </div>
+                <div class="box-content">
+                    <section>
+                        <label for="condition">Condición<span class="required">*</span></label>
+                        <input type="text" id="condition" name="condition" required>
+                    </section>
+                </div>
+                <div class="box-content">
+                    <section>
+                        <label for="sl_status">Status<span class="required">*</span></label>
+                        <select name="sl_status" id="sl_status" class="select-required" required>
+                            <option selected disabled>Seleccionar estado</option>
+                            <option value="Listo">Listo</option>
+                            <option value="Mantenimiento">Mantenimiento</option>
+                            <option value="Dañado">Dañado</option>
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="En espera">En espera</option>
+                        </select>
+                    </section>
+                </div>
+            </div>
+            <div class="box">
+                <div class="btns-form">
+                    <button type="submit">Registrar</button>
+                    <button type="button" class="close-form-container">Cancelar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    {% comment %}
+    <div class="form-container">
+        {% include "includes/forms/form_use_product.html" with item=tool category=tool.categoria movement_types=movement_types status=status %}
+    </div>
+    {% endcomment %}
+    {% comment %}
+    <!-- <div class="form-container">
+        {% include "includes/forms/form_use_product.html" with category=tool.categoria item_use=True movement_types=movement_types status=status %}
+        <form {% if tool.categoria == 'HERRAMIENTA' %}class="form-tool"{% else %}class="form-item"{% endif %}>
+            <h1>Registrar uso de {% if tool.categoria == 'HERRAMIENTA' %}herramienta{% else %}equipo{% endif %}</h1>
+            {% csrf_token %}
+            {% if 1 == 1 %}
+                <input type="hidden" name="url">
+            {% endif %}
+            <div class="box">
+                <div class="box-content">
+                    <label>{{item.descripcion}}</label>
+                </div>
+                <div class="box-content">
+                    <section>
+                        <label for="cantidad_uso">Cantidad</label>
+                        <input type="number" step="any" name="cantidad_uso" id="cantidad_uso" {% if item %} value="{{ item.cantidad|default:0 }}" {% endif %}>
+                    </section>
+                </div>
+                {% if 1 != 1 %}
+                    <div class="box-content">
+                        <section>
+                            <label for="sl_tipo_mov">Tipo de movimiento<span class="required">*</span></label>
+                            <select name="sl_tipo_mov" id="sl_tipo_mov" class="select-required" required>
+                                <option selected disabled>Selecciona tipo de movimiento</option>
+                                {% if category == 'HERRAMIENTA' %}
+                                    <option value="RENTA">Renta</option>
+                                    <option value="VENTA">Venta</option>
+                                {% else %}
+                                    <option value="USO">Uso</option>
+                                    <option value="RENTA">Renta</option>
+                                {% endif %}
+                            </select>
+                        </section>
+                    </div>
+                {% endif %}
+                <div class="box-content">
+                    <section>
+                        <label for="sl_status">Status<span class="required">*</span></label>
+                        <select name="sl_status" id="sl_status" class="select-required" required>
+                            {% for s in status %}
+                            {% if s.nombre == 'USO' %}
+                            <option selected value="{{ s.pk }}">{{ s.descripcion }}</option>
+                            {% endif %}
+                            <option value="{{ s.pk }}">{{ s.descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </section>
+                </div>
+                <div class="box-content">
+                    <section>
+                        <label for="sl_status">Status<span class="required">*</span></label>
+                        <select name="sl_status" id="sl_status" class="select-required" required>
+                            <option selected disabled>Seleccionar estado</option>
+                            <option value="Listo">Listo</option>
+                            <option value="Mantenimiento">Mantenimiento</option>
+                            <option value="Dañado">Dañado</option>
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="En espera">En espera</option>
+                        </select>
+                    </section>
+                </div>
+                <div class="box-content">
+                    <section>
+                        <label for="condicion">Condición</label>
+                        <input type="text" name="condicion" id="condicion" {% if item %} value="{{ item.condicion|default:'' }}" {% endif %}>
+                    </section>
+                </div>
+            </div>
+            <div class="box inp-fechas">
+                <div class="box-content inp-fsalida">
+                    <section>
+                        <label for="fsalida">Fecha de salida</label>
+                        <input type="date" id="fsalida" name="fsalida" style="--calendar-logo: url({% static 'img/calendar.png' %})">
+                    </section>
+                </div>
+                <div class="box-content inp-fregreso">
+                    <section>
+                        <label for="fregreso">Fecha de regreso</label>
+                        <input type="date" id="fregreso" name="fregreso" style="--calendar-logo: url({% static 'img/calendar.png' %})">
+                    </section>
+                </div>
+            </div>
+            <div class="box">
+                <div class="btns-form">
+                    <button type="submit">Registrar uso</button>
+                    <button type="button" class="close-form-container">Cerrar</button>
+                </div>
+            </div>
+        </form>
+    </div> -->
+    {% endcomment %}
+    
+    <div class="form-container">
+        <form class="form-product">
+            <h1>Editar uso de herramienta {{ tool.descripcion }}</h1>
+            {% csrf_token %}
+            <div class="box">
+                <div class="box-content">
+                    <label>{{ tool.descripcion }}</label>
+                </div>
+                <div class="box-content">
+                    <section>
+                        <label for="cantidad_uso">Cantidad</label>
+                        <input type="number" step="any" min="0" name="cantidad_uso" value="{{ tool_using.cantidad_disponible|default:0 }}" id="cantidad_uso">
+                    </section>
+                </div>
+                <div class="box-content">
+                    <section>
+                        <label for="sl_status">Status<span class="required">*</span></label>
+                        <select name="sl_status" id="sl_status" class="select-required" required>
+                            <option selected disabled>Seleccionar estado</option>
+                            <option {% if tool_using.estado == 'Listo' %} selected  {% endif %} value="Listo">Listo</option>
+                            <option {% if tool_using.estado == 'Mantenimiento' %} selected  {% endif %} value="Mantenimiento">Mantenimiento</option>
+                            <option {% if tool_using.estado == 'Dañado' %} selected  {% endif %} value="Dañado">Dañado</option>
+                            <option {% if tool_using.estado == 'Pendiente' %} selected  {% endif %} value="Pendiente">Pendiente</option>
+                            <option {% if tool_using.estado == 'En espera' %} selected  {% endif %} value="En espera">En espera</option>
+                        </select>
+                    </section>
+                </div>
+                <div class="box-content">
+                    <section>
+                        <label for="condicion">Condición</label>
+                        <input type="text" name="condicion" id="condicion" value="{{ tool_using.condiciones }}">
+                    </section>
+                </div>
+            </div>
+            <div class="box">
+                <div class="btns-form">
+                    <button type="submit">Registrar uso</button>
+                    <button type="button" class="close-form-container">Cerrar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="form-container">
+        <form class="form-use-product">
+            <h1>Hacer uso de {% if tool.categoria == 'HERRAMIENTA' %}herramienta{% else %}equipo{% endif %}
+                para: {% if tool.categoria == 'HERRAMIENTA' %}renta o venta{% else %}renta, uso o venta{% endif %}
+            </h1>
+            {% csrf_token %}
+            {% if 1 == 1 %}
+                <input type="hidden" name="url">
+            {% endif %}
+            <div class="box">
+                <div class="box-content">
+                    <label>{{tool.descripcion}}</label>
+                </div>
+                <div class="box-content">
+                    <section>
+                        <label for="cantidad_uso">Cantidad</label>
+                        <input type="number" step="any" min="0" name="cantidad_uso" id="cantidad_uso">
+                    </section>
+                </div>
+                <div class="box-content">
+                    <section>
+                        <label for="sl_tipo_mov">Tipo de movimiento<span class="required">*</span></label>
+                        <select name="sl_tipo_mov" id="sl_tipo_mov" class="select-required" required>
+                            <option selected disabled>Selecciona tipo de movimiento</option>
+                            {% if tool.categoria == 'HERRAMIENTA' %}
+                                <option value="RENTA">Renta</option>
+                                <option value="VENTA">Venta</option>
+                            {% else %}
+                                <option value="USO">Uso</option>
+                                <option value="RENTA">Renta</option>
+                            {% endif %}
+                        </select>
+                    </section>
+                </div>
+            </div>
+            <div class="box inp-fechas">
+                <div class="box-content inp-fsalida">
+                    <section>
+                        <label for="fsalida">Fecha de salida</label>
+                        <input type="date" id="fsalida" name="fsalida" style="--calendar-logo: url({% static 'img/calendar.png' %})">
+                    </section>
+                </div>
+                <div class="box-content inp-fregreso">
+                    <section>
+                        <label for="fregreso">Fecha de regreso</label>
+                        <input type="date" id="fregreso" name="fregreso" style="--calendar-logo: url({% static 'img/calendar.png' %})">
+                    </section>
+                </div>
+            </div>
+            <div class="box">
+                <div class="btns-form">
+                    <button type="submit">Registrar uso</button>
+                    <button type="button" class="close-form-container">Cerrar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endif %}
 {% endblock %}
 {% block scripts %}
     {% if user.is_staff %}

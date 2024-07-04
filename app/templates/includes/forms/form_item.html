@@ -4,19 +4,23 @@
     {% csrf_token %}
     <h1>{% if item %}Actualizar equipo: {{ item.descripcion }} {% else %}Registrar equipo{% endif %}</h1>
     {% if not item %}
-    <div class="box">
-        <div class="box-content">
-            <section>
-                <label>Tipo de registro<span class="required">*</span></label>
-                <select name="sl_opcion" class="select-required" id="sl_opcion" required>
-                    <option selected disabled>Elige una opción</option>
-                    <option value="1">Ingreso</option>
-                    <option value="2">Renta</option>
-                </select>
-            </section>
-        </div>
-    </div>
+        <input type="hidden" id="categoria" name="categoria" value="EQUIPO" class="input-required" required>
     {% endif %}
+    {% comment %}
+        {% if not item %}
+        <div class="box">
+            <div class="box-content">
+                <section>
+                    <label>Tipo de registro<span class="required">*</span></label>
+                    <select name="sl_opcion" class="select-required" id="sl_opcion" required>
+                        <option selected disabled>Elige una opción</option>
+                        <option value="1">Ingreso</option>                    
+                    </select>
+                </section>
+            </div>
+        </div>
+        {% endif %}
+    {% endcomment %}
     <div class="box">
         <div class="box-content">
             <section>
@@ -39,7 +43,7 @@
             </section>
             <section>
                 <label for="cantidad">Cantidad</label>
-                <input type="number" id="cantidad" name="cantidad" step="any" {% if tool %} value="{{ tool.cantidad }}" {% endif %}>
+                <input type="number" id="cantidad" name="cantidad" step="any" {% if item %} value="{{ item.cantidad }}" {% endif %}>
             </section>
         </div>
         <div class="box-content">
@@ -94,8 +98,6 @@
                 </select>
             </section>
         </div>
-    </div>
-    <div class="box">
         <div class="box-content">
             <section>
                 <label for="status">Status</label>
@@ -106,6 +108,9 @@
                 </select>
             </section>
         </div>
+    </div>
+    {% comment %}
+    <div class="box">
         <div class="box-content">
             <section>
                 <label for="fsalida">Fecha de salida</label>
@@ -119,6 +124,7 @@
             </section>
         </div>
     </div>
+    {% endcomment %}
     <div class="box">
         <div class="btns-form">
             <button type="submit">Registrar</button>

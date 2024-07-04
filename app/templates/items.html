@@ -7,7 +7,7 @@
 {% endblock %}
 {% block content %}
 {% if user.is_staff %}
-    <span hidden class="url-add-item">{% url 'app:add_item' %}</span>
+    <span hidden class="url-add-item">{% url 'app:add_product' %}</span>
 {% endif %}
 <div class="container">
     <h1 class="text-center">Almacen IMA</h1>
@@ -57,9 +57,12 @@
                             <td>{{ item.modelo }}</td>
                             <td><p class="status status-{% if item.status == 'Listo' %}success{% elif item.status == 'Mantenimiento' %}warning{% else %}error{% endif %}">{{ item.status }}</p></td>
                             <td class="btns">
-                                <button><a href="{% url 'app:item' id_item=item.pk %}"><i class="fa-solid fa-eye"></i></a></button>
+                                <button class="btn-info"><a href="{% url 'app:item' id_item=item.pk %}"><i class="fa-solid fa-eye"></i></a></button>
                                 {% if user.is_staff %}
-                                    <button><a href="{% url 'app:delete_product' id_product=item.pk %}"><i class="fa-solid fa-trash"></i></a></button>
+                                <form class="form-delete-tool">
+                                    {% csrf_token %}
+                                    <button class="btn-danger" type="submit" name="deleteProduct" id="{% url 'app:delete_product' id_product=item.pk %}"><p><i class="fa-solid fa-trash"></i></p></button>
+                                </form>
                                 {% endif %}
                             </td>
                         </tr>
@@ -69,6 +72,7 @@
         </div>
     </div>
     <section>
+        <h6 class="text-center h6">Filtrado de equipos</h6>
         <div class="table-products">
             {% comment %}
             <div class="product-list">

@@ -1,0 +1,54 @@
+.card {
+    border: 1px solid #bbb;
+    border-radius: 5px;
+    width: 350px;
+}
+
+.card a {
+    text-decoration: none;
+    color: #000
+}
+
+.card-title {
+    font-size: 1.5em;
+}
+.card-subtitle {
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.card-text {
+    font-size: 1em
+}
+.btn-text {
+    position: relative;
+}
+.btn-text .texthover {
+    visibility: hidden;
+    padding: 0.25em 0.5em;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 0.25em;
+    white-space: nowrap;
+    
+    /* Position the btn-text */
+    position: fixed;
+    z-index: 1000;
+    top: 33%;
+    left: 80%;
+    transition-property: visibility;
+    transition-duration: .3s;
+}
+
+.btn-text:hover .texthover {
+    visibility: visible;
+}
+
+.form-rent-product > button p i {
+    color: #09b609 !important;
+}
+button a i.disabled,
+button p i.disabled {
+    color: #ccc !important;
+}
