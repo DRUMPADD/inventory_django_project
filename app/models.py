@@ -71,21 +71,6 @@ class Producto(models.Model):
     objects = models.Manager()
     products = ProductModelManager()
 
-
-class Venta(models.Model):
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
-    fecha_salida = models.DateField(null=True, blank=True)
-    objects = models.Manager()
-    sales = SaleModelManager()
-
-class Renta(models.Model):
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
-    cantidad = models.FloatField(default=0)
-    fecha_salida = models.DateField(null=True, blank=True)
-    fecha_regreso = models.DateField(null=True, blank=True)
-    objects = models.Manager()
-    rents = RentModelManager()
-
 class Producto_uso(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidad_uso = models.FloatField(default=0, blank=True)
@@ -95,6 +80,20 @@ class Producto_uso(models.Model):
 
     class Meta:
         db_table = 'Producto_uso'
+
+class Venta(models.Model):
+    producto = models.ForeignKey(Producto_uso, on_delete=models.CASCADE)
+    fecha_salida = models.DateField(null=True, blank=True)
+    objects = models.Manager()
+    sales = SaleModelManager()
+
+class Renta(models.Model):
+    producto = models.ForeignKey(Producto_uso, on_delete=models.CASCADE)
+    cantidad = models.FloatField(default=0)
+    fecha_salida = models.DateField(null=True, blank=True)
+    fecha_regreso = models.DateField(null=True, blank=True)
+    objects = models.Manager()
+    rents = RentModelManager()
 
 class Historial(models.Model):
     usuario = models.ForeignKey(MyCustomUser, on_delete=models.CASCADE)
